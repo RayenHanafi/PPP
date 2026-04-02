@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type MouseEvent } from "react";
 import { motion } from "framer-motion";
 import { Menu, X, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -17,7 +17,10 @@ export function Navbar() {
   }, []);
 
   // Smooth scroll function
-  const handleSmoothScroll = (e, href) => {
+  const handleSmoothScroll = (
+    e: MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
     e.preventDefault();
     const sectionId = href.replace("#", "");
     const section = document.getElementById(sectionId);

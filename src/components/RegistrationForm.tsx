@@ -116,7 +116,7 @@ export function RegistrationForm() {
       // if (!response.ok) throw new Error('Submission failed');
 
       setSubmissionSuccess(true);
-    } catch (err) {
+    } catch {
       setServerError("Network error. Please try again later.");
     } finally {
       setIsSubmitting(false);
