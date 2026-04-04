@@ -6,7 +6,10 @@ import { Footer } from "../components/landing/Footer";
 
 export function BecomeContributor() {
   return (
-    <div className="min-h-screen bg-[#120226] text-white">
+    <div
+      id="become-contributor"
+      className="min-h-screen bg-[#120226] text-white"
+    >
       <Navbar />
 
       {/* Hero Section */}
@@ -24,8 +27,8 @@ export function BecomeContributor() {
             </h1>
 
             <p className="text-lg md:text-xl text-[#B6B6CC] max-w-2xl mx-auto leading-relaxed">
-              Join organizations already sharing threat intelligence on ThreatChain. 
-              Request your API key to start contributing.
+              Join organizations already sharing threat intelligence on
+              ThreatChain. Request your API key to start contributing.
             </p>
           </motion.div>
         </div>

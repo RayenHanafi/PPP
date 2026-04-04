@@ -3,6 +3,7 @@ import type { Variants } from "framer-motion";
 import { Circle } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { GLSLHills } from "../ui/glsl-hills";
+import { Link } from "react-router-dom";
 
 export function HeroGeometric({
   badge = "Blockchain-Powered Security Intelligence",
@@ -30,9 +31,9 @@ export function HeroGeometric({
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#120226]">
       {/* GLSLHills Background */}
       <div className="absolute inset-0 z-0">
-        <GLSLHills 
-          width="100%" 
-          height="100vh" 
+        <GLSLHills
+          width="100%"
+          height="100vh"
           cameraZ={125}
           planeSize={256}
           speed={0.3}
@@ -97,11 +98,12 @@ export function HeroGeometric({
             <button className="bg-[#4A3CC9] text-white px-8 py-4 rounded-lg hover:bg-[#5A49DA] shadow-lg shadow-[#4A3CC9]/50 transition-all duration-300 hover:scale-105 font-medium min-w-[220px]">
               Explore Threats
             </button>
-            <button className="border-2 border-[#4A3CC9] text-[#A789D6] bg-transparent px-8 py-4 rounded-lg hover:bg-[#4A3CC9]/10 transition-all duration-300 font-medium min-w-[220px]">
-              <a href="/become-contributor" className="text-[#A789D6]">
-                Become a Contributor
-              </a>
-            </button>
+            <Link
+              to="/become-contributor"
+              className="border-2 border-[#4A3CC9] text-[#A789D6] bg-transparent px-8 py-4 rounded-lg hover:bg-[#4A3CC9]/10 transition-all duration-300 font-medium min-w-[220px] inline-flex items-center justify-center"
+            >
+              Become a Contributor
+            </Link>
           </motion.div>
         </div>
       </div>
