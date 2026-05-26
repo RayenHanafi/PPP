@@ -86,7 +86,7 @@ export function AdminOverview() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F8FC] px-4 py-10 text-[#100A36] dark:bg-[#0F0F1E] dark:text-white sm:px-6 lg:px-8">
+    <main className="app-page px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-6xl space-y-6">
         <div className="flex items-center justify-between gap-2">
           <Link to="/">
@@ -185,6 +185,18 @@ export function AdminOverview() {
                   </p>
                 </CardContent>
               </Card>
+              <Card className="border-[#E5E8F2] dark:border-[#2A2A3E]">
+                <CardContent className="space-y-2">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[#707A91] dark:text-[#A1A5AF]">
+                    Pending Moderation
+                  </p>
+                  <p className="text-2xl font-semibold">
+                    {isLoading
+                      ? "..."
+                      : (data.stats?.pending_submissions ?? 0).toLocaleString()}
+                  </p>
+                </CardContent>
+              </Card>
             </div>
 
             {!isLoading && data.organisations && data.organisations.items.length === 0 ? (
@@ -221,3 +233,4 @@ export function AdminOverview() {
     </main>
   );
 }
+

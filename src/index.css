@@ -12,6 +12,32 @@
   --color-brand-body-gray: #b6b6cc;
 }
 
+:root {
+  --color-page-bg: #f7f8fc;
+  --color-page-fg: #100a36;
+  --color-card-bg: #ffffff;
+  --color-card-fg: #100a36;
+  --color-border-strong: #e5e8f2;
+  --color-border-soft: #eef1fa;
+  --color-text-muted: #616b82;
+  --color-input-bg: #ffffff;
+  --color-input-fg: #100a36;
+  --color-input-border: #d7dbea;
+}
+
+.dark {
+  --color-page-bg: #0f0f1e;
+  --color-page-fg: #ffffff;
+  --color-card-bg: #0f0f1e;
+  --color-card-fg: #ffffff;
+  --color-border-strong: #2a2a3e;
+  --color-border-soft: #2a2a3e;
+  --color-text-muted: #a1a5af;
+  --color-input-bg: #0f0f1e;
+  --color-input-fg: #ffffff;
+  --color-input-border: #3a3a4e;
+}
+
 @keyframes shimmer {
   100% {
     transform: translateX(100%);
@@ -19,6 +45,12 @@
 }
 
 body {
-  background-color: var(--color-brand-deep-bg-purple);
-  color: var(--color-brand-body-gray);
+  background-color: var(--color-page-bg);
+  color: var(--color-page-fg);
+}
+
+.app-page {
+  min-height: 100vh;
+  background-color: var(--color-page-bg);
+  color: var(--color-page-fg);
 }

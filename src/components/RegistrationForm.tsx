@@ -168,22 +168,22 @@ export function RegistrationForm() {
             required
             icon={Building}
             isValid={
-              !errors.organizationName && formData.organizationName.length >= 3
+              !errors.organizationName && formData.organizationName.trim().length >= 1
             }
           />
 
           <FormInput
-            label="SIRET / Business Registration Number"
+            label="SIRET (14 digits)"
             name="siret"
             value={formData.siret}
             onChange={(value) => handleChange("siret", value)}
             onBlur={() => handleBlur("siret")}
             error={touched.siret ? errors.siret : undefined}
-            helpText="Your company's legal registration number (SIRET for France, EIN for USA, etc.)"
-            placeholder="e.g., 12345678901234"
+            helpText="Required. Must contain exactly 14 digits."
+            placeholder="14-digit SIRET (e.g., 12345678901234)"
             required
             icon={FileText}
-            isValid={!errors.siret && formData.siret.length >= 5}
+            isValid={!errors.siret && /^\d{14}$/.test(formData.siret)}
           />
         </div>
 
@@ -211,11 +211,10 @@ export function RegistrationForm() {
             onChange={(value) => handleChange("website", value)}
             onBlur={() => handleBlur("website")}
             error={touched.website ? errors.website : undefined}
-            helpText="Your official company website"
+            helpText="Optional. If provided, maximum 255 characters."
             placeholder="https://www.yourcompany.com"
-            required
             icon={Globe}
-            isValid={!errors.website && formData.website.startsWith("http")}
+            isValid={!errors.website && formData.website.length > 0}
           />
         </div>
 
@@ -227,9 +226,8 @@ export function RegistrationForm() {
             onChange={(value) => handleChange("country", value)}
             onBlur={() => handleBlur("country")}
             error={touched.country ? errors.country : undefined}
-            helpText="Where is your organization located?"
+            helpText="Optional."
             placeholder="Select your country"
-            required
             options={countries}
             icon={MapPin}
             isValid={!errors.country && !!formData.country}
@@ -248,15 +246,14 @@ export function RegistrationForm() {
                 ? errors.activityDescription
                 : undefined
             }
-            helpText="Explain your cybersecurity context and use case (minimum 50 characters)"
+            helpText="Optional. If provided, maximum 2048 characters."
             placeholder="Describe your organization's cybersecurity activities and why you want to contribute to ThreatChain..."
-            required
             rows={6}
-            maxLength={1000}
+            maxLength={2048}
             showCharCount
             isValid={
               !errors.activityDescription &&
-              formData.activityDescription.length >= 50
+              formData.activityDescription.length > 0
             }
           />
         </div>

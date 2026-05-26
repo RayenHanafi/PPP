@@ -6,6 +6,7 @@ import { Badge, Button, Card, CardContent } from "../../components/ui";
 import { publicApi, type ThreatActor } from "../../services";
 
 const publicTlps = new Set(["green", "white"]);
+const publicStatuses = new Set(["approved", "validated"]);
 
 export function PublicThreatActorDetails() {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +29,7 @@ export function PublicThreatActorDetails() {
       const response = await publicApi.getPublicThreatActor(id);
       const tlp = String(response.tlp || "").toLowerCase();
 
-      if (!publicTlps.has(tlp) || response.status !== "validated") {
+      if (!publicTlps.has(tlp) || !publicStatuses.has(response.status)) {
         setRecord(null);
         setError("This threat actor profile is not publicly accessible.");
         return;

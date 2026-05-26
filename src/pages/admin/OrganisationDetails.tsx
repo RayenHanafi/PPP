@@ -9,6 +9,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  Input,
 } from "../../components/ui";
 import { AdminTopBar } from "../../components/AdminTopBar";
 import { adminApi, type Organisation } from "../../services";
@@ -44,6 +45,7 @@ export function AdminOrganisationDetails() {
   const [actionError, setActionError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isActionLoading, setIsActionLoading] = useState(false);
+  const [trustDraft, setTrustDraft] = useState("");
 
   const loadOrganisations = useCallback(async () => {
     if (!auth.token || auth.role !== "admin") {
@@ -132,6 +134,37 @@ export function AdminOrganisationDetails() {
     }
   }, [auth.role, auth.token, id, loadOrganisations]);
 
+  const handleDeny = useCallback(async () => {
+    if (!auth.token || auth.role !== "admin" || !id) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Deny this pending organisation request? The organisation status will be set to revoked.",
+    );
+    if (!confirmed) {
+      return;
+    }
+
+    setIsActionLoading(true);
+    setActionError(null);
+    setSuccessMessage(null);
+
+    try {
+      await adminApi.revokeOrganisation(auth.token, id);
+      setSuccessMessage("Organisation request denied successfully.");
+      await loadOrganisations();
+    } catch (caughtError) {
+      if (caughtError instanceof Error && caughtError.message) {
+        setActionError(caughtError.message);
+      } else {
+        setActionError("Unable to deny organisation request.");
+      }
+    } finally {
+      setIsActionLoading(false);
+    }
+  }, [auth.role, auth.token, id, loadOrganisations]);
+
   useEffect(() => {
     const timer = window.setTimeout(() => {
       void loadOrganisations();
@@ -149,12 +182,48 @@ export function AdminOrganisationDetails() {
     return records.find((item) => item.id === id) ?? null;
   }, [id, records]);
 
+  useEffect(() => {
+    if (organisation) {
+      setTrustDraft(String(organisation.trust_score));
+    }
+  }, [organisation]);
+
+  const handleTrustScoreSave = useCallback(async () => {
+    if (!auth.token || auth.role !== "admin" || !organisation) {
+      return;
+    }
+
+    const parsed = Number(trustDraft);
+    if (!Number.isInteger(parsed) || parsed < 0 || parsed > 100) {
+      setActionError("Trust score must be an integer between 0 and 100.");
+      return;
+    }
+
+    setIsActionLoading(true);
+    setActionError(null);
+    setSuccessMessage(null);
+
+    try {
+      await adminApi.updateOrganisationTrustScore(auth.token, organisation.id, parsed);
+      setSuccessMessage("Trust score updated successfully.");
+      await loadOrganisations();
+    } catch (caughtError) {
+      if (caughtError instanceof Error && caughtError.message) {
+        setActionError(caughtError.message);
+      } else {
+        setActionError("Unable to update trust score.");
+      }
+    } finally {
+      setIsActionLoading(false);
+    }
+  }, [auth.role, auth.token, loadOrganisations, organisation, trustDraft]);
+
   if (!auth.token || auth.role !== "admin") {
     return <Navigate to="/login" replace />;
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F8FC] px-4 py-10 text-[#100A36] dark:bg-[#0F0F1E] dark:text-white sm:px-6 lg:px-8">
+    <main className="app-page px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-4xl space-y-6">
         <AdminTopBar />
         <Card className="border-[#E5E8F2] dark:border-[#2A2A3E]">
@@ -257,6 +326,29 @@ export function AdminOrganisationDetails() {
                       <p>{toDisplayDate(organisation.created_at)}</p>
                     </CardContent>
                   </Card>
+                  <Card className="border-[#E5E8F2] dark:border-[#2A2A3E] sm:col-span-2">
+                    <CardContent className="space-y-3">
+                      <p className="text-xs uppercase tracking-[0.18em] text-[#707A91] dark:text-[#A1A5AF]">
+                        Trust Score (0-100)
+                      </p>
+                      <div className="flex flex-wrap items-end gap-2">
+                        <Input
+                          type="number"
+                          min={0}
+                          max={100}
+                          value={trustDraft}
+                          onChange={(event) => setTrustDraft(event.target.value)}
+                        />
+                        <Button
+                          size="sm"
+                          disabled={isActionLoading}
+                          onClick={() => void handleTrustScoreSave()}
+                        >
+                          {isActionLoading ? "Saving..." : "Save trust score"}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
 
                 {organisation.description ? (
@@ -272,9 +364,19 @@ export function AdminOrganisationDetails() {
 
                 <div className="flex flex-wrap gap-2">
                   {organisation.status === "pending" ? (
-                    <Button size="sm" disabled={isActionLoading} onClick={() => void handleApprove()}>
-                      {isActionLoading ? "Processing..." : "Approve organisation"}
-                    </Button>
+                    <>
+                      <Button size="sm" disabled={isActionLoading} onClick={() => void handleApprove()}>
+                        {isActionLoading ? "Processing..." : "Approve organisation"}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={isActionLoading}
+                        onClick={() => void handleDeny()}
+                      >
+                        {isActionLoading ? "Processing..." : "Deny organisation"}
+                      </Button>
+                    </>
                   ) : null}
                   {organisation.status === "approved" ? (
                     <Button
@@ -298,3 +400,4 @@ export function AdminOrganisationDetails() {
     </main>
   );
 }
+

@@ -2,7 +2,7 @@ import { Shield, Search, TriangleAlert, Moon, Sun } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { Button } from "../ui/button";
 import { cn } from "../../lib/utils";
-import { useTheme } from "../../lib/theme";
+import { useTheme } from "../../lib/useTheme";
 import type { ReactNode } from "react";
 
 const navigation = [
@@ -34,8 +34,8 @@ export function PublicShell({
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="min-h-screen bg-[#F7F8FC] text-[#100A36] dark:bg-[#0F0F1E] dark:text-white">
-      <header className="sticky top-0 z-40 border-b border-[#E4E8F2] bg-white/95 backdrop-blur-md dark:border-[#2A2A3E] dark:bg-[#0F0F1E]/95">
+    <div className="min-h-screen bg-[var(--color-page-bg)] text-[var(--color-page-fg)]">
+      <header className="sticky top-0 z-40 border-b border-[var(--color-border-strong)] bg-[var(--color-card-bg)]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <Link to="/dashboard" className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-[#100A36] text-white dark:bg-[#6B5FD9]">
@@ -100,7 +100,7 @@ export function PublicShell({
       </header>
 
       <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <section className="relative overflow-hidden rounded-lg border border-[#E5E8F2] bg-white px-6 py-8 dark:border-[#2A2A3E] dark:bg-[#0F0F1E] sm:px-8 sm:py-10">
+        <section className="relative overflow-hidden rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-card-bg)] px-6 py-8 sm:px-8 sm:py-10">
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-[#4A3CC9] to-transparent opacity-60" />
           <div className="absolute -right-20 top-[-5rem] h-56 w-56 rounded-full bg-[#4A3CC9]/10 blur-3xl dark:bg-[#6B5FD9]/5" />
           <div className="absolute -left-10 bottom-[-5rem] h-56 w-56 rounded-full bg-[#100A36]/5 blur-3xl dark:bg-[#6B5FD9]/5" />

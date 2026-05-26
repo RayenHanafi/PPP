@@ -24,12 +24,21 @@ export function PublicRegister() {
               Join organizations already sharing threat intelligence on
               ThreatChain.
             </p>
-            <Link
-              to="/dashboard"
-              className="mt-8 inline-flex rounded-2xl bg-[#4A3CC9] px-6 py-3 font-bold text-white transition duration-300 hover:bg-[#3A2CA9]"
-            >
-              Back to Dashboard
-            </Link>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to="/dashboard"
+                className="inline-flex rounded-2xl bg-[#4A3CC9] px-6 py-3 font-bold text-white transition duration-300 hover:bg-[#3A2CA9]"
+              >
+                Go to Dashboard
+              </Link>
+
+              <Link
+                to="/"
+                className="inline-flex rounded-2xl border border-[#2A1673] bg-[#100A36] px-6 py-3 font-bold text-white transition duration-300 hover:bg-[#1B1457]"
+              >
+                Back to Home
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>

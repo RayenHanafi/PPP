@@ -16,6 +16,7 @@ import {
 } from "../../services";
 
 const publicTlps = new Set(["green", "white"]);
+const publicStatuses = new Set(["approved", "validated"]);
 
 function normalizeIocListResponse(
   payload: Awaited<ReturnType<typeof publicApi.getPublicIocs>>,
@@ -98,7 +99,7 @@ export function PublicDashboard() {
     try {
       const response = await publicApi.getPublicIocs();
       const rows = normalizeIocListResponse(response)
-        .filter((ioc) => publicTlps.has(ioc.tlp) && ioc.status === "validated")
+        .filter((ioc) => publicTlps.has(ioc.tlp) && publicStatuses.has(ioc.status))
         .slice(0, 3);
       setLatestIocs(rows);
     } catch (caughtError) {
@@ -121,7 +122,7 @@ export function PublicDashboard() {
       const response = await publicApi.getPublicThreatActors();
       const rows = normalizeThreatActorListResponse(response)
         .filter(
-          (actor) => publicTlps.has(actor.tlp) && actor.status === "validated",
+          (actor) => publicTlps.has(actor.tlp) && publicStatuses.has(actor.status),
         )
         .slice(0, 3);
       setLatestThreatActors(rows);
@@ -146,7 +147,7 @@ export function PublicDashboard() {
       const rows = normalizeMalwareListResponse(response)
         .filter(
           (sample) =>
-            publicTlps.has(sample.tlp) && sample.status === "validated",
+            publicTlps.has(sample.tlp) && publicStatuses.has(sample.status),
         )
         .slice(0, 3);
       setLatestMalware(rows);

@@ -36,7 +36,7 @@ function toDisplayDate(value?: string | null) {
 }
 
 function statusTone(status: ThreatActor["status"]) {
-  if (status === "validated") {
+  if (status === "approved" || status === "validated") {
     return "success" as const;
   }
   if (status === "pending") {
@@ -75,6 +75,9 @@ export function AdminThreatActors() {
   const [tlpFilter, setTlpFilter] = useState<TlpFilter>("all");
   const [motivationFilter, setMotivationFilter] = useState<MotivationFilter>("all");
   const [selectedActor, setSelectedActor] = useState<ThreatActor | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [pendingModerationId, setPendingModerationId] = useState<string | null>(null);
 
   const loadThreatActors = useCallback(async () => {
     if (!auth.token || auth.role !== "admin") {
@@ -83,6 +86,7 @@ export function AdminThreatActors() {
 
     setIsLoading(true);
     setError(null);
+    setActionError(null);
 
     try {
       const response = await adminApi.getAdminThreatActors(auth.token);
@@ -98,6 +102,38 @@ export function AdminThreatActors() {
       setIsLoading(false);
     }
   }, [auth.role, auth.token]);
+
+  const handleModerationAction = useCallback(
+    async (actorId: string, action: "approve" | "reject") => {
+      if (!auth.token || auth.role !== "admin") {
+        return;
+      }
+
+      setActionError(null);
+      setSuccessMessage(null);
+      setPendingModerationId(actorId);
+
+      try {
+        if (action === "approve") {
+          await adminApi.approveThreatActor(auth.token, actorId);
+          setSuccessMessage("Threat actor approved and trust score updated.");
+        } else {
+          await adminApi.rejectThreatActor(auth.token, actorId);
+          setSuccessMessage("Threat actor rejected and trust score updated.");
+        }
+        await loadThreatActors();
+      } catch (caughtError) {
+        if (caughtError instanceof Error && caughtError.message) {
+          setActionError(caughtError.message);
+        } else {
+          setActionError("Unable to apply moderation action.");
+        }
+      } finally {
+        setPendingModerationId(null);
+      }
+    },
+    [auth.role, auth.token, loadThreatActors],
+  );
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -158,7 +194,7 @@ export function AdminThreatActors() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F8FC] px-4 py-10 text-[#100A36] dark:bg-[#0F0F1E] dark:text-white sm:px-6 lg:px-8">
+    <main className="app-page px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-6xl space-y-6">
         <AdminTopBar />
         <Card className="border-[#E5E8F2] dark:border-[#2A2A3E]">
@@ -205,7 +241,8 @@ export function AdminThreatActors() {
               >
                 <option value="all">All statuses</option>
                 <option value="pending">pending</option>
-                <option value="validated">validated</option>
+                <option value="approved">approved</option>
+                <option value="validated">validated (legacy)</option>
                 <option value="rejected">rejected</option>
                 <option value="false_positive">false_positive</option>
               </Select>
@@ -247,6 +284,18 @@ export function AdminThreatActors() {
                     Retry
                   </Button>
                 </div>
+              </div>
+            ) : null}
+
+            {actionError ? (
+              <div className="rounded-lg border border-[#F4C4C4] bg-[#FDE8E8] p-3 text-sm text-[#C11E1E] dark:border-[#5A2A2A] dark:bg-[#3A1F1F] dark:text-[#FF9F9F]">
+                {actionError}
+              </div>
+            ) : null}
+
+            {successMessage ? (
+              <div className="rounded-lg border border-[#CDEBD9] bg-[#E7F8EF] p-3 text-sm text-[#0F7A43] dark:border-[#1B3A2A] dark:bg-[#1B3A2A] dark:text-[#4EDC7F]">
+                {successMessage}
               </div>
             ) : null}
 
@@ -297,13 +346,34 @@ export function AdminThreatActors() {
                         </TableCell>
                         <TableCell>{toDisplayDate(actor.submitted_at)}</TableCell>
                         <TableCell className="text-right">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setSelectedActor(actor)}
-                          >
-                            View details
-                          </Button>
+                          <div className="flex justify-end gap-2">
+                            {actor.status === "pending" ? (
+                              <>
+                                <Button
+                                  size="sm"
+                                  disabled={pendingModerationId === actor.id}
+                                  onClick={() => void handleModerationAction(actor.id, "approve")}
+                                >
+                                  {pendingModerationId === actor.id ? "Processing..." : "Approve"}
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  disabled={pendingModerationId === actor.id}
+                                  onClick={() => void handleModerationAction(actor.id, "reject")}
+                                >
+                                  Reject
+                                </Button>
+                              </>
+                            ) : null}
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => setSelectedActor(actor)}
+                            >
+                              View details
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -358,3 +428,4 @@ export function AdminThreatActors() {
     </main>
   );
 }
+

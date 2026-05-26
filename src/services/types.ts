@@ -27,6 +27,15 @@ export interface Organisation {
   created_at: string;
 }
 
+export interface RegisterOrganisationPayload {
+  name: string;
+  siret: string;
+  email: string;
+  website?: string | null;
+  description?: string | null;
+  country?: string | null;
+}
+
 export interface ContributorMe {
   id: string;
   email: string;
@@ -38,6 +47,7 @@ export interface ContributorMe {
 export type TlpLevel = "red" | "amber" | "green" | "white";
 
 export type IocStatus =
+  | "approved"
   | "validated"
   | "pending"
   | "rejected"
@@ -84,7 +94,7 @@ export interface ThreatActor {
   description: string;
   org_id: string;
   tlp: TlpLevel | string;
-  status: "validated" | "pending" | "rejected" | "false_positive";
+  status: "approved" | "validated" | "pending" | "rejected" | "false_positive";
   submitted_at: string;
   organisation?: Organisation;
 }
@@ -99,7 +109,7 @@ export interface MalwareSample {
   capabilities: string[];
   org_id: string;
   tlp: TlpLevel | string;
-  status: "validated" | "pending" | "rejected" | "false_positive";
+  status: "approved" | "validated" | "pending" | "rejected" | "false_positive";
   submitted_at: string;
   organisation?: Organisation;
 }
@@ -114,6 +124,10 @@ export interface DashboardStats {
   total_threat_actors?: number;
   total_malware_samples?: number;
   total_blockchain_records?: number;
+  pending_iocs?: number;
+  pending_threat_actors?: number;
+  pending_malware_samples?: number;
+  pending_submissions?: number;
   by_type?: Record<string, number>;
   by_tlp?: Record<string, number>;
   recent_iocs?: IOC[];

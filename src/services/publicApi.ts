@@ -6,6 +6,7 @@ import type {
   IOC,
   MalwareSample,
   PaginatedResponse,
+  RegisterOrganisationPayload,
   ThreatActor,
 } from "./types";
 
@@ -16,15 +17,6 @@ export interface PublicListParams {
   status?: string;
   page?: number;
   limit?: number;
-}
-
-export interface RegisterOrganisationPayload {
-  name: string;
-  siret: string;
-  email: string;
-  website?: string | null;
-  description?: string | null;
-  country?: string | null;
 }
 
 export interface ChatPayload {

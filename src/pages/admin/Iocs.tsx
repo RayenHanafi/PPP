@@ -36,7 +36,7 @@ function toDisplayDate(value?: string | null) {
 }
 
 function statusTone(status: IOC["status"]) {
-  if (status === "validated") {
+  if (status === "approved" || status === "validated") {
     return "success" as const;
   }
   if (status === "pending") {
@@ -75,6 +75,9 @@ export function AdminIocs() {
   const [tlpFilter, setTlpFilter] = useState<TlpFilter>("all");
   const [typeFilter, setTypeFilter] = useState<IocTypeFilter>("all");
   const [selectedIoc, setSelectedIoc] = useState<IOC | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [pendingModerationId, setPendingModerationId] = useState<string | null>(null);
 
   const loadIocs = useCallback(async () => {
     if (!auth.token || auth.role !== "admin") {
@@ -83,6 +86,7 @@ export function AdminIocs() {
 
     setIsLoading(true);
     setError(null);
+    setActionError(null);
 
     try {
       const response = await adminApi.getAdminIocs(auth.token);
@@ -98,6 +102,38 @@ export function AdminIocs() {
       setIsLoading(false);
     }
   }, [auth.role, auth.token]);
+
+  const handleModerationAction = useCallback(
+    async (iocId: string, action: "approve" | "reject") => {
+      if (!auth.token || auth.role !== "admin") {
+        return;
+      }
+
+      setActionError(null);
+      setSuccessMessage(null);
+      setPendingModerationId(iocId);
+
+      try {
+        if (action === "approve") {
+          await adminApi.approveIoc(auth.token, iocId);
+          setSuccessMessage("IOC approved and trust score updated.");
+        } else {
+          await adminApi.rejectIoc(auth.token, iocId);
+          setSuccessMessage("IOC rejected and trust score updated.");
+        }
+        await loadIocs();
+      } catch (caughtError) {
+        if (caughtError instanceof Error && caughtError.message) {
+          setActionError(caughtError.message);
+        } else {
+          setActionError("Unable to apply moderation action.");
+        }
+      } finally {
+        setPendingModerationId(null);
+      }
+    },
+    [auth.role, auth.token, loadIocs],
+  );
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -157,7 +193,7 @@ export function AdminIocs() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F8FC] px-4 py-10 text-[#100A36] dark:bg-[#0F0F1E] dark:text-white sm:px-6 lg:px-8">
+    <main className="app-page px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-6xl space-y-6">
         <AdminTopBar />
         <Card className="border-[#E5E8F2] dark:border-[#2A2A3E]">
@@ -202,7 +238,8 @@ export function AdminIocs() {
               >
                 <option value="all">All statuses</option>
                 <option value="pending">pending</option>
-                <option value="validated">validated</option>
+                <option value="approved">approved</option>
+                <option value="validated">validated (legacy)</option>
                 <option value="rejected">rejected</option>
                 <option value="revoked">revoked</option>
                 <option value="false_positive">false_positive</option>
@@ -240,6 +277,18 @@ export function AdminIocs() {
                     Retry
                   </Button>
                 </div>
+              </div>
+            ) : null}
+
+            {actionError ? (
+              <div className="rounded-lg border border-[#F4C4C4] bg-[#FDE8E8] p-3 text-sm text-[#C11E1E] dark:border-[#5A2A2A] dark:bg-[#3A1F1F] dark:text-[#FF9F9F]">
+                {actionError}
+              </div>
+            ) : null}
+
+            {successMessage ? (
+              <div className="rounded-lg border border-[#CDEBD9] bg-[#E7F8EF] p-3 text-sm text-[#0F7A43] dark:border-[#1B3A2A] dark:bg-[#1B3A2A] dark:text-[#4EDC7F]">
+                {successMessage}
               </div>
             ) : null}
 
@@ -287,9 +336,30 @@ export function AdminIocs() {
                         </TableCell>
                         <TableCell>{toDisplayDate(ioc.submitted_at)}</TableCell>
                         <TableCell className="text-right">
-                          <Button variant="outline" size="sm" onClick={() => setSelectedIoc(ioc)}>
-                            View details
-                          </Button>
+                          <div className="flex justify-end gap-2">
+                            {ioc.status === "pending" ? (
+                              <>
+                                <Button
+                                  size="sm"
+                                  disabled={pendingModerationId === ioc.id}
+                                  onClick={() => void handleModerationAction(ioc.id, "approve")}
+                                >
+                                  {pendingModerationId === ioc.id ? "Processing..." : "Approve"}
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  disabled={pendingModerationId === ioc.id}
+                                  onClick={() => void handleModerationAction(ioc.id, "reject")}
+                                >
+                                  Reject
+                                </Button>
+                              </>
+                            ) : null}
+                            <Button variant="outline" size="sm" onClick={() => setSelectedIoc(ioc)}>
+                              View details
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -342,3 +412,4 @@ export function AdminIocs() {
     </main>
   );
 }
+

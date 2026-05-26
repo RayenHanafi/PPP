@@ -33,6 +33,7 @@ const motivations = [
   "sabotage",
 ] as const;
 const publicTlps = new Set(["green", "white"]);
+const publicStatuses = new Set(["approved", "validated"]);
 
 function normalizeThreatActorsResponse(
   payload: Awaited<ReturnType<typeof publicApi.getPublicThreatActors>>,
@@ -62,7 +63,7 @@ export function PublicThreatActors() {
         const matchesMotivation =
           motivation === "all" || actor.motivation === motivation;
         const matchesVisibility =
-          publicTlps.has(actor.tlp) && actor.status === "validated";
+          publicTlps.has(actor.tlp) && publicStatuses.has(actor.status);
         return matchesMotivation && matchesVisibility;
       });
 

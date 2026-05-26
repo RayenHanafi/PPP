@@ -77,7 +77,7 @@ export function ContributorThreatActorNew() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F8FC] px-4 py-10 text-[#100A36] dark:bg-[#0F0F1E] dark:text-white sm:px-6 lg:px-8">
+    <main className="app-page px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-4xl space-y-6">
         <ContributorTopBar />
         <Card className="border-[#E5E8F2] dark:border-[#2A2A3E]">
@@ -176,3 +176,4 @@ export function ContributorThreatActorNew() {
     </main>
   );
 }
+

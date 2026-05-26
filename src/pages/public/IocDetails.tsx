@@ -6,6 +6,7 @@ import { PublicShell } from "../../components/public-dashboard/PublicShell";
 import { publicApi, type IOC } from "../../services";
 
 const publicTlps = new Set(["green", "white"]);
+const publicStatuses = new Set(["approved", "validated"]);
 
 function toDisplayDate(value?: string | null) {
   if (!value) {
@@ -36,7 +37,7 @@ export function PublicIocDetails() {
     try {
       const response = await publicApi.getPublicIoc(id);
 
-      if (!publicTlps.has(response.tlp) || response.status !== "validated") {
+      if (!publicTlps.has(response.tlp) || !publicStatuses.has(response.status)) {
         setRecord(null);
         setError("This IOC is not publicly accessible.");
         return;

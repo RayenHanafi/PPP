@@ -148,6 +148,40 @@ export function AdminOrganisations() {
     [auth.role, auth.token, loadOrganisations],
   );
 
+  const handleDeny = useCallback(
+    async (organisationId: string) => {
+      if (!auth.token || auth.role !== "admin") {
+        return;
+      }
+
+      const confirmed = window.confirm(
+        "Deny this pending organisation request? The organisation status will be set to revoked.",
+      );
+      if (!confirmed) {
+        return;
+      }
+
+      setActionError(null);
+      setSuccessMessage(null);
+      setPendingActionId(organisationId);
+
+      try {
+        await adminApi.revokeOrganisation(auth.token, organisationId);
+        setSuccessMessage("Organisation request denied successfully.");
+        await loadOrganisations();
+      } catch (caughtError) {
+        if (caughtError instanceof Error && caughtError.message) {
+          setActionError(caughtError.message);
+        } else {
+          setActionError("Unable to deny organisation request.");
+        }
+      } finally {
+        setPendingActionId(null);
+      }
+    },
+    [auth.role, auth.token, loadOrganisations],
+  );
+
   useEffect(() => {
     const timer = window.setTimeout(() => {
       void loadOrganisations();
@@ -171,7 +205,7 @@ export function AdminOrganisations() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F8FC] px-4 py-10 text-[#100A36] dark:bg-[#0F0F1E] dark:text-white sm:px-6 lg:px-8">
+    <main className="app-page px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-6xl space-y-6">
         <AdminTopBar />
         <Card className="border-[#E5E8F2] dark:border-[#2A2A3E]">
@@ -179,7 +213,8 @@ export function AdminOrganisations() {
             <div>
               <CardTitle className="text-xl">Organisations</CardTitle>
               <CardDescription>
-                Review contributor organisation requests and manage approval state.
+                Review contributor organisation requests and manage approval
+                state.
               </CardDescription>
             </div>
             <Link to="/admin">
@@ -194,7 +229,9 @@ export function AdminOrganisations() {
               <Select
                 label="Filter status"
                 value={filter}
-                onChange={(event) => setFilter(event.target.value as OrganisationFilter)}
+                onChange={(event) =>
+                  setFilter(event.target.value as OrganisationFilter)
+                }
               >
                 <option value="all">All</option>
                 <option value="pending">Pending</option>
@@ -207,7 +244,11 @@ export function AdminOrganisations() {
               <div className="rounded-lg border border-[#F4C4C4] bg-[#FDE8E8] p-3 text-sm text-[#C11E1E] dark:border-[#5A2A2A] dark:bg-[#3A1F1F] dark:text-[#FF9F9F]">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <p>{error}</p>
-                  <Button variant="outline" size="sm" onClick={() => void loadOrganisations()}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => void loadOrganisations()}
+                  >
                     Retry
                   </Button>
                 </div>
@@ -229,7 +270,10 @@ export function AdminOrganisations() {
             {isLoading ? (
               <div className="space-y-3">
                 {Array.from({ length: 4 }).map((_, index) => (
-                  <Card key={`org-row-skeleton-${index}`} className="border-[#E5E8F2] dark:border-[#2A2A3E]">
+                  <Card
+                    key={`org-row-skeleton-${index}`}
+                    className="border-[#E5E8F2] dark:border-[#2A2A3E]"
+                  >
                     <CardContent className="py-4">
                       <div className="h-4 w-full animate-pulse rounded bg-[#EEF1FA] dark:bg-[#1A1A2E]" />
                     </CardContent>
@@ -249,8 +293,11 @@ export function AdminOrganisations() {
                       <TableHeaderCell>Email</TableHeaderCell>
                       <TableHeaderCell>SIRET</TableHeaderCell>
                       <TableHeaderCell>Status</TableHeaderCell>
+                      <TableHeaderCell>Trust score</TableHeaderCell>
                       <TableHeaderCell>Created</TableHeaderCell>
-                      <TableHeaderCell className="text-right">Actions</TableHeaderCell>
+                      <TableHeaderCell className="text-right">
+                        Actions
+                      </TableHeaderCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -266,30 +313,55 @@ export function AdminOrganisations() {
                             {organisation.status}
                           </Badge>
                         </TableCell>
-                        <TableCell>{toDisplayDate(organisation.created_at)}</TableCell>
+                        <TableCell>{organisation.trust_score}</TableCell>
+                        <TableCell>
+                          {toDisplayDate(organisation.created_at)}
+                        </TableCell>
                         <TableCell>
                           <div className="flex justify-end gap-2">
-                            <Link to={`/admin/organisations/${organisation.id}`}>
+                            <Link
+                              to={`/admin/organisations/${organisation.id}`}
+                            >
                               <Button variant="outline" size="sm">
                                 Details
                               </Button>
                             </Link>
                             {organisation.status === "pending" ? (
-                              <Button
-                                size="sm"
-                                disabled={pendingActionId === organisation.id}
-                                onClick={() => void handleApprove(organisation.id)}
-                              >
-                                {pendingActionId === organisation.id ? "Processing..." : "Approve"}
-                              </Button>
+                              <>
+                                <Button
+                                  size="sm"
+                                  disabled={pendingActionId === organisation.id}
+                                  onClick={() =>
+                                    void handleApprove(organisation.id)
+                                  }
+                                >
+                                  {pendingActionId === organisation.id
+                                    ? "Processing..."
+                                    : "Approve"}
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  disabled={pendingActionId === organisation.id}
+                                  onClick={() =>
+                                    void handleDeny(organisation.id)
+                                  }
+                                >
+                                  Revoke
+                                </Button>
+                              </>
                             ) : organisation.status === "approved" ? (
                               <Button
                                 variant="outline"
                                 size="sm"
                                 disabled={pendingActionId === organisation.id}
-                                onClick={() => void handleRevoke(organisation.id)}
+                                onClick={() =>
+                                  void handleRevoke(organisation.id)
+                                }
                               >
-                                {pendingActionId === organisation.id ? "Processing..." : "Revoke"}
+                                {pendingActionId === organisation.id
+                                  ? "Processing..."
+                                  : "Revoke"}
                               </Button>
                             ) : (
                               <Badge tone="neutral">No action</Badge>

@@ -21,15 +21,15 @@ export function Select({
   return (
     <label className="block space-y-2">
       {label ? (
-        <span className="block text-sm font-medium text-[#39415C]">
+        <span className="block text-sm font-medium text-[var(--color-card-fg)]">
           {label}
         </span>
       ) : null}
       <select
         id={selectId}
         className={cn(
-          "h-11 w-full rounded-lg border bg-white px-4 text-[#100A36] outline-none transition dark:border-[#3A3A4E] dark:bg-[#0F0F1E] dark:text-white focus:border-[#4A3CC9] focus:ring-4 focus:ring-[#4A3CC9]/10 dark:focus:border-[#6B5FD9] dark:focus:ring-[#6B5FD9]/20",
-          error ? "border-[#E13B3B]" : "border-[#D7DBEA]",
+          "h-11 w-full rounded-lg border bg-[var(--color-input-bg)] px-4 text-[var(--color-input-fg)] outline-none transition focus:border-[#4A3CC9] focus:ring-4 focus:ring-[#4A3CC9]/10",
+          error ? "border-[#E13B3B]" : "border-[var(--color-input-border)]",
           className,
         )}
         {...props}
@@ -40,7 +40,7 @@ export function Select({
         <span className="block text-xs text-[#E13B3B]">{error}</span>
       ) : null}
       {!error && hint ? (
-        <span className="block text-xs text-[#6B728A]">{hint}</span>
+        <span className="block text-xs text-[var(--color-text-muted)]">{hint}</span>
       ) : null}
     </label>
   );

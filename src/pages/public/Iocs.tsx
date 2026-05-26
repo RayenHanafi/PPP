@@ -12,6 +12,7 @@ import { Button, Card, CardContent, Input, Select } from "../../components/ui";
 
 const iocTypes = ["all", "ip", "url", "hash", "email"] as const;
 const publicTlps = new Set(["green", "white"]);
+const publicStatuses = new Set(["approved", "validated"]);
 
 function normalizeIocListResponse(
   payload: Awaited<ReturnType<typeof publicApi.getPublicIocs>>,
@@ -47,7 +48,7 @@ export function PublicIocs() {
       });
 
       const rows = normalizeIocListResponse(response).filter(
-        (ioc) => publicTlps.has(ioc.tlp) && ioc.status === "validated",
+        (ioc) => publicTlps.has(ioc.tlp) && publicStatuses.has(ioc.status),
       );
       setIocs(rows);
     } catch (caughtError) {

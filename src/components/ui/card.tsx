@@ -5,7 +5,7 @@ export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        "rounded-lg border border-[#E6E9F3] bg-white dark:border-[#2A2A3E] dark:bg-[#0F0F1E]",
+        "rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-card-bg)] text-[var(--color-card-fg)]",
         className,
       )}
       {...props}
@@ -20,7 +20,7 @@ export function CardHeader({
   return (
     <div
       className={cn(
-        "border-b border-[#EEF1FA] p-5 dark:border-[#2A2A3E]",
+        "border-b border-[var(--color-border-soft)] p-5",
         className,
       )}
       {...props}
@@ -35,7 +35,7 @@ export function CardTitle({
   return (
     <h3
       className={cn(
-        "text-base font-semibold text-[#100A36] dark:text-white",
+        "text-base font-semibold text-[var(--color-card-fg)]",
         className,
       )}
       {...props}
@@ -50,7 +50,7 @@ export function CardDescription({
   return (
     <p
       className={cn(
-        "mt-1 text-sm text-[#677089] dark:text-[#A1A5AF]",
+        "mt-1 text-sm text-[var(--color-text-muted)]",
         className,
       )}
       {...props}
@@ -72,7 +72,7 @@ export function CardFooter({
   return (
     <div
       className={cn(
-        "border-t border-[#EEF1FA] p-5 dark:border-[#2A2A3E]",
+        "border-t border-[var(--color-border-soft)] p-5",
         className,
       )}
       {...props}

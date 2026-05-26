@@ -4,39 +4,37 @@ export interface ValidationRule {
   maxLength?: number;
   pattern?: RegExp;
   mustBeTrue?: boolean;
-  custom?: (value: any) => boolean;
+  custom?: (value: string) => boolean;
 }
 
 export interface ValidationSchema {
   [key: string]: ValidationRule;
 }
 
+const siretPattern = /^\d{14}$/;
+
 export const registrationSchema: ValidationSchema = {
   organizationName: {
     required: true,
-    minLength: 3,
-    maxLength: 100,
+    minLength: 1,
+    maxLength: 255,
   },
   siret: {
     required: true,
-    pattern: /^[0-9A-Za-z\-]+$/,
-    minLength: 5,
+    pattern: siretPattern,
   },
   email: {
     required: true,
     pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   website: {
-    required: true,
-    pattern: /^https?:\/\/.+/,
+    maxLength: 255,
   },
   country: {
-    required: true,
+    maxLength: 100,
   },
   activityDescription: {
-    required: true,
-    minLength: 50,
-    maxLength: 1000,
+    maxLength: 2048,
   },
   termsAccepted: {
     required: true,
@@ -47,7 +45,7 @@ export const registrationSchema: ValidationSchema = {
 export const errorMessages: Record<string, string> = {
   required: "This field is required",
   email: "Please enter a valid email address",
-  url: "Please enter a valid URL starting with http:// or https://",
+  siret: "SIRET must contain exactly 14 digits",
   minLength: "This field is too short",
   maxLength: "This field is too long",
   pattern: "Invalid format",
@@ -55,36 +53,44 @@ export const errorMessages: Record<string, string> = {
 };
 
 export function validateField(
-  value: any,
+  value: unknown,
   rules: ValidationRule,
 ): string | null {
-  if (rules.required && (!value || value.toString().trim() === "")) {
+  if (rules.mustBeTrue) {
+    return value === true ? null : errorMessages.termsRequired;
+  }
+
+  const normalized =
+    typeof value === "string" ? value : value === undefined || value === null ? "" : String(value);
+  const isEmpty = normalized.trim() === "";
+
+  if (rules.required && isEmpty) {
     return errorMessages.required;
   }
 
-  if (rules.minLength && value.length < rules.minLength) {
+  if (!rules.required && isEmpty) {
+    return null;
+  }
+
+  if (rules.minLength && normalized.length < rules.minLength) {
     return `Minimum ${rules.minLength} characters required`;
   }
 
-  if (rules.maxLength && value.length > rules.maxLength) {
+  if (rules.maxLength && normalized.length > rules.maxLength) {
     return `Maximum ${rules.maxLength} characters allowed`;
   }
 
-  if (rules.pattern && !rules.pattern.test(value)) {
+  if (rules.pattern && !rules.pattern.test(normalized)) {
+    if (rules.pattern === siretPattern) {
+      return errorMessages.siret;
+    }
     if (rules.pattern.toString().includes("@")) {
       return errorMessages.email;
-    }
-    if (rules.pattern.toString().includes("http")) {
-      return errorMessages.url;
     }
     return errorMessages.pattern;
   }
 
-  if (rules.mustBeTrue && value !== true) {
-    return errorMessages.termsRequired;
-  }
-
-  if (rules.custom && !rules.custom(value)) {
+  if (rules.custom && !rules.custom(normalized)) {
     return errorMessages.pattern;
   }
 
@@ -92,7 +98,7 @@ export function validateField(
 }
 
 export function validateForm(
-  data: Record<string, any>,
+  data: Record<string, unknown>,
   schema: ValidationSchema,
 ): Record<string, string> {
   const errors: Record<string, string> = {};

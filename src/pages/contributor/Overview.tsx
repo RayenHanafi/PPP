@@ -96,7 +96,7 @@ export function ContributorOverview() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F8FC] px-4 py-10 text-[#100A36] dark:bg-[#0F0F1E] dark:text-white sm:px-6 lg:px-8">
+    <main className="app-page px-4 py-10 sm:px-6 lg:px-8">
       <div className="mx-auto w-full max-w-5xl space-y-6">
         <div className="flex items-center justify-between gap-2">
           <Link to="/">
@@ -128,9 +128,12 @@ export function ContributorOverview() {
                 {data.me?.organisation?.name || "Contributor organization"}
               </Badge>
               <Badge tone="neutral">{data.me?.email || "Account email unavailable"}</Badge>
+              <Badge tone="warning">
+                Trust score: {isLoading ? "..." : (data.me?.organisation?.trust_score ?? "N/A")}
+              </Badge>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-4">
+            <div className="grid gap-4 md:grid-cols-5">
               <Card className="border-[#E5E8F2] dark:border-[#2A2A3E]">
                 <CardContent className="space-y-2">
                   <p className="text-xs uppercase tracking-[0.18em] text-[#707A91] dark:text-[#A1A5AF]">
@@ -148,6 +151,16 @@ export function ContributorOverview() {
                   </p>
                   <p className="text-2xl font-semibold text-[#100A36] dark:text-white">
                     {isLoading ? "..." : data.iocCount}
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-[#E5E8F2] dark:border-[#2A2A3E]">
+                <CardContent className="space-y-2">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[#707A91] dark:text-[#A1A5AF]">
+                    Trust Score
+                  </p>
+                  <p className="text-2xl font-semibold text-[#100A36] dark:text-white">
+                    {isLoading ? "..." : (data.me?.organisation?.trust_score ?? "N/A")}
                   </p>
                 </CardContent>
               </Card>
@@ -180,6 +193,15 @@ export function ContributorOverview() {
             ) : null}
 
             <div className="flex flex-wrap gap-2">
+              <Link to="/contributor/iocs">
+                <Button variant="outline" size="sm">My IOCs</Button>
+              </Link>
+              <Link to="/contributor/malware">
+                <Button variant="outline" size="sm">My Malware</Button>
+              </Link>
+              <Link to="/contributor/threat-actors">
+                <Button variant="outline" size="sm">My Threat Actors</Button>
+              </Link>
               <Link to="/contributor/iocs/new">
                 <Button size="sm">Submit IOC</Button>
               </Link>
@@ -196,3 +218,4 @@ export function ContributorOverview() {
     </main>
   );
 }
+
