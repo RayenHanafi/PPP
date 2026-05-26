@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export function Footer() {
   return (
     <footer className="bg-[#100A36] border-t border-[#2A1673]/30 py-16 px-4 md:px-6 relative z-10">
@@ -18,12 +20,15 @@ export function Footer() {
             Links
           </h4>
           <ul className="space-y-3">
-            {[
-              "Public Dashboard",
-              "Documentation",
-              "API Reference",
-              "Contact",
-            ].map((link) => (
+            <li>
+              <Link
+                to="/dashboard"
+                className="text-[#B6B6CC] hover:text-[#A789D6] transition-colors duration-200"
+              >
+                Public Dashboard
+              </Link>
+            </li>
+            {["Documentation", "API Reference", "Contact"].map((link) => (
               <li key={link}>
                 <a
                   href="#"

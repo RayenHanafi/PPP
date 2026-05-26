@@ -33,8 +33,10 @@ export function SuccessMessage({ email, onReturnHome }: SuccessMessageProps) {
         transition={{ delay: 0.3 }}
         className="text-lg text-[#B6B6CC] mb-6 max-w-xl mx-auto"
       >
-        Thank you for your interest in ThreatChain. Our team will review your
-        application and send your API key to{" "}
+        Your contributor request has been submitted successfully. An
+        administrator will review your organization. If approved, we will send
+        your contributor portal credentials, temporary password, and automation
+        API key to{" "}
         <strong className="text-[#A789D6]">{email}</strong> within 24-48 hours.
       </motion.p>
 

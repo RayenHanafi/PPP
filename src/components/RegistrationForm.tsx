@@ -17,6 +17,7 @@ import { FormCheckbox } from "./FormCheckbox";
 import { SuccessMessage } from "./SuccessMessage";
 import { validateField, registrationSchema } from "../lib/validation";
 import { countries } from "../lib/countries";
+import { publicApi } from "../services";
 
 interface FormData {
   organizationName: string;
@@ -99,25 +100,25 @@ export function RegistrationForm() {
       return;
     }
 
-    // Submit form
     setIsSubmitting(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // In a real app, you would do:
-      // const response = await fetch('/api/register', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(formData),
-      // });
-
-      // if (!response.ok) throw new Error('Submission failed');
+      await publicApi.registerOrganisation({
+        name: formData.organizationName.trim(),
+        siret: formData.siret.trim(),
+        email: formData.email.trim(),
+        website: formData.website.trim() || null,
+        description: formData.activityDescription.trim() || null,
+        country: formData.country || null,
+      });
 
       setSubmissionSuccess(true);
-    } catch {
-      setServerError("Network error. Please try again later.");
+    } catch (caughtError) {
+      if (caughtError instanceof Error && caughtError.message) {
+        setServerError(caughtError.message);
+      } else {
+        setServerError("Network error. Please try again later.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -195,7 +196,7 @@ export function RegistrationForm() {
             onChange={(value) => handleChange("email", value)}
             onBlur={() => handleBlur("email")}
             error={touched.email ? errors.email : undefined}
-            helpText="We'll send your API key to this address"
+            helpText="Approval updates and contributor access instructions will be sent to this address"
             placeholder="security@yourcompany.com"
             required
             icon={Mail}

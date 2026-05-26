@@ -85,7 +85,13 @@ export function Navbar() {
           {/* Desktop CTA Buttons */}
           <div className="hidden md:flex items-center gap-4">
             <Link
-              to="/become-contributor"
+              to="/login"
+              className="text-[#A789D6] hover:text-white transition-colors duration-200 font-medium"
+            >
+              Sign In
+            </Link>
+            <Link
+              to="/register"
               className="bg-[#4A3CC9] text-white px-6 py-2.5 rounded-lg hover:bg-[#5A49DA] shadow-lg shadow-[#4A3CC9]/30 transition-all duration-300 hover:scale-105 font-medium"
             >
               Become a Contributor
@@ -125,11 +131,16 @@ export function Navbar() {
                 </a>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-[#2A1673]/30">
-                <button className="text-[#A789D6] hover:text-white transition-colors duration-200 font-medium py-2 text-left">
-                  Sign In
-                </button>
                 <Link
-                  to="/become-contributor"
+                  to="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="text-[#A789D6] hover:text-white transition-colors duration-200 font-medium py-2 text-left"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setIsMobileMenuOpen(false)}
                   className="w-full bg-[#4A3CC9] text-white px-6 py-3 rounded-lg hover:bg-[#5A49DA] transition-all duration-300 font-medium text-center"
                 >
                   Become a Contributor

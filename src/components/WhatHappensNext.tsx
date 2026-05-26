@@ -10,14 +10,15 @@ const steps = [
   },
   {
     icon: Key,
-    title: "Approval & API Key",
-    description: "Once approved, you'll receive your unique API key via email",
+    title: "Approval & Access",
+    description:
+      "If approved, you will receive contributor portal credentials, a temporary password, and an automation API key by email",
   },
   {
     icon: Upload,
-    title: "Start Contributing",
+    title: "Portal + Automation",
     description:
-      "Use your API key to start submitting IOCs, threat actors, and malware samples",
+      "Sign in to the contributor portal for dashboard actions, and use the API key for automation and script integrations",
   },
 ];
 

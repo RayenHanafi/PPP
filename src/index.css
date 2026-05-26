@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-brand-deep-bg-purple: #120226;
-  --color-brand-primary-interface-blue: #100A36;
-  --color-brand-action-glow-blue: #4A3CC9;
-  --color-brand-aura-purple: #2A1673;
-  --color-brand-highlight-purple: #A789D6;
+  --color-brand-primary-interface-blue: #100a36;
+  --color-brand-action-glow-blue: #4a3cc9;
+  --color-brand-aura-purple: #2a1673;
+  --color-brand-highlight-purple: #a789d6;
   --color-brand-core-white: #ffffff;
-  --color-brand-body-gray: #B6B6CC;
+  --color-brand-body-gray: #b6b6cc;
 }
 
 @keyframes shimmer {

@@ -95,11 +95,14 @@ export function HeroGeometric({
             animate="visible"
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <button className="bg-[#4A3CC9] text-white px-8 py-4 rounded-lg hover:bg-[#5A49DA] shadow-lg shadow-[#4A3CC9]/50 transition-all duration-300 hover:scale-105 font-medium min-w-[220px]">
-              Explore Threats
-            </button>
             <Link
-              to="/become-contributor"
+              to="/dashboard"
+              className="bg-[#4A3CC9] text-white px-8 py-4 rounded-lg hover:bg-[#5A49DA] shadow-lg shadow-[#4A3CC9]/50 transition-all duration-300 hover:scale-105 font-medium min-w-[220px] inline-flex items-center justify-center"
+            >
+              Explore Threats
+            </Link>
+            <Link
+              to="/register"
               className="border-2 border-[#4A3CC9] text-[#A789D6] bg-transparent px-8 py-4 rounded-lg hover:bg-[#4A3CC9]/10 transition-all duration-300 font-medium min-w-[220px] inline-flex items-center justify-center"
             >
               Become a Contributor
