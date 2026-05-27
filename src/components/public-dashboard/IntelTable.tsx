@@ -26,6 +26,14 @@ interface IntelTableProps {
 }
 
 export function IntelTable({ rows, title }: IntelTableProps) {
+  const statusTone = (value: string) => {
+    const status = value.toLowerCase();
+    if (status.includes("invalid") || status.includes("failed")) return "danger";
+    if (status.includes("false")) return "warning";
+    if (status.includes("verified")) return "success";
+    return "neutral";
+  };
+
   return (
     <Card className="overflow-hidden border-[#E5E8F2] dark:border-[#2A2A3E]">
       <CardContent className="p-0">
@@ -55,7 +63,7 @@ export function IntelTable({ rows, title }: IntelTableProps) {
                     {row.secondary}
                   </TableCell>
                   <TableCell>
-                    <Badge tone="success">{row.status}</Badge>
+                    <Badge tone={statusTone(row.status)}>{row.status}</Badge>
                   </TableCell>
                   <TableCell>
                     <Badge tone="blue">{row.visibility}</Badge>

@@ -185,7 +185,7 @@ export function PublicDashboard() {
 
       const record = result.value as unknown as Record<string, unknown>;
       const txHash =
-        typeof record.tx_hash === "string" ? record.tx_hash : undefined;
+        typeof record.latest_tx_hash === "string" ? record.latest_tx_hash : undefined;
 
       if (!txHash) {
         return [];
@@ -193,15 +193,19 @@ export function PublicDashboard() {
 
       const ioc = latestIocs[index];
       const eventType =
-        typeof record.event_type === "string" ? record.event_type : "verified";
-      const isValid = record.is_valid !== false;
+        typeof record.latest_event_type === "string" ? record.latest_event_type : "verified";
+      const isValid = record.verified !== false;
+      const currentStatus =
+        typeof record.current_status === "string" ? record.current_status : "approved";
+      const statusLabel =
+        !isValid ? "invalid" : currentStatus === "false_positive" ? "false positive" : "verified";
 
       return [
         {
           id: ioc.id,
           primary: txHash,
           secondary: `${eventType} for ${ioc.id}`,
-          status: isValid ? "verified" : "invalid",
+          status: statusLabel,
           visibility: "public",
           href: `/blockchain?iocId=${ioc.id}`,
         },

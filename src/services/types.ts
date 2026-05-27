@@ -56,12 +56,32 @@ export type IocStatus =
   | "deprecated";
 
 export interface BlockchainRecord {
-  id: string;
-  ioc_id: string;
+  id?: string;
+  ioc_id?: string;
   tx_hash: string;
   block_number: number;
-  event_type?: "IOCRegistered" | "IOCRevoked" | string;
+  event_type?: "IOC_APPROVED" | "IOC_FALSE_POSITIVE" | string;
   recorded_at: string;
+  etherscan_url?: string | null;
+  chain_id?: number | null;
+  contract_address?: string | null;
+  block_hash?: string | null;
+  log_index?: number | null;
+}
+
+export interface BlockchainVerificationSummary {
+  verified: boolean;
+  current_status: "approved" | "false_positive" | "no_blockchain_record";
+  latest_tx_hash: string | null;
+  block_number: number | null;
+  chain_id: number | null;
+  contract_address: string | null;
+  etherscan_url: string | null;
+  latest_recorded_at: string | null;
+  latest_event_type: "IOC_APPROVED" | "IOC_FALSE_POSITIVE" | string | null;
+  content_hash: string;
+  history_length: number;
+  is_valid: boolean;
 }
 
 export interface IOC {

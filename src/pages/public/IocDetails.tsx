@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { Check, Copy } from "lucide-react";
 import { Badge, Button, Card, CardContent } from "../../components/ui";
 import { RecordDetail } from "../../components/public-dashboard/RecordDetail";
 import { PublicShell } from "../../components/public-dashboard/PublicShell";
@@ -22,6 +23,7 @@ export function PublicIocDetails() {
   const [record, setRecord] = useState<IOC | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const loadRecord = useCallback(async () => {
     if (!id) {
@@ -67,6 +69,21 @@ export function PublicIocDetails() {
     }
     return `${count} blockchain record${count === 1 ? "" : "s"} available for verification.`;
   }, [record?.blockchain_records]);
+
+  const handleCopyIocId = useCallback(async () => {
+    if (!record?.id) return;
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(record.id);
+      } else {
+        throw new Error("Clipboard API unavailable");
+      }
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
+  }, [record?.id]);
 
   return (
     <PublicShell
@@ -142,6 +159,27 @@ export function PublicIocDetails() {
                 <Badge tone="neutral">No tags</Badge>
               )}
             </div>
+          </div>
+
+          <div className="space-y-3 rounded-lg border border-[#E5E8F2] bg-[#FBFCFF] p-4 dark:border-[#2A2A3E] dark:bg-[#0F0F1E]">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#707A91] dark:text-[#A1A5AF]">
+              IOC ID
+            </p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="break-all rounded-md bg-[#EEF1FA] px-3 py-2 font-mono text-xs text-[#100A36] dark:bg-[#1A1A2E] dark:text-white">
+                {record.id}
+              </p>
+              <Button variant="outline" size="sm" onClick={() => void handleCopyIocId()}>
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                {copied ? "Copied" : "Copy"}
+              </Button>
+            </div>
+            <p className="text-xs text-[#616B82] dark:text-[#A1A5AF]">
+              Use this identifier to verify immutable blockchain records.
+            </p>
+            <Link to={`/blockchain?iocId=${record.id}`}>
+              <Button size="sm">Verify on Blockchain</Button>
+            </Link>
           </div>
         </RecordDetail>
       ) : (

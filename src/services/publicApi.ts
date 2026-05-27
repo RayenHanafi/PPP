@@ -1,6 +1,7 @@
 import { get, post } from "./apiClient";
 import type {
   BlockchainRecord,
+  BlockchainVerificationSummary,
   ChatResponse,
   DashboardStats,
   IOC,
@@ -79,7 +80,7 @@ export function registerOrganisation(payload: RegisterOrganisationPayload) {
 }
 
 export function verifyBlockchainRecord(iocId: string) {
-  return get<BlockchainRecord>(`/blockchain/verify/${iocId}`);
+  return get<BlockchainVerificationSummary>(`/blockchain/verify/${iocId}`);
 }
 
 export function getBlockchainRecords(iocId: string) {
