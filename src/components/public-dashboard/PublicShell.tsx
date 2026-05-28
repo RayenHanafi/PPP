@@ -11,7 +11,6 @@ const navigation = [
   { to: "/threat-actors", label: "Threat Actors" },
   { to: "/malware", label: "Malware" },
   { to: "/blockchain", label: "Blockchain" },
-  { to: "/chat", label: "Chat" },
 ];
 
 interface PublicShellProps {

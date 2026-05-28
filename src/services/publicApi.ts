@@ -22,7 +22,7 @@ export interface PublicListParams {
 
 export interface ChatPayload {
   message: string;
-  context_type: "public" | "contributor" | "admin";
+  context_type?: "public" | "contributor" | "admin";
   ioc_id?: string;
 }
 
@@ -88,5 +88,5 @@ export function getBlockchainRecords(iocId: string) {
 }
 
 export function sendChatMessage(payload: ChatPayload) {
-  return post<ChatResponse>("/chat", payload);
+  return post<ChatResponse>("/ai/chat", payload);
 }

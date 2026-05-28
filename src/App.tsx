@@ -6,6 +6,7 @@ import {
   RequireContributorPasswordResolved,
 } from "./auth/guards";
 import { ThemeProvider } from "./lib/theme";
+import { FloatingAssistant } from "./components/assistant/FloatingAssistant";
 import { Landing } from "./pages/Landing";
 import { Login } from "./pages/Login";
 import { AdminIocs } from "./pages/admin/Iocs";
@@ -32,7 +33,6 @@ import { PublicThreatActorDetails } from "./pages/public/ThreatActorDetails";
 import { PublicMalware } from "./pages/public/Malware";
 import { PublicMalwareDetails } from "./pages/public/MalwareDetails";
 import { PublicBlockchain } from "./pages/public/Blockchain";
-import { PublicChat } from "./pages/public/Chat";
 import { PublicRegister } from "./pages/public/Register";
 
 function AppRoutes() {
@@ -49,7 +49,6 @@ function AppRoutes() {
       <Route path="/malware" element={<PublicMalware />} />
       <Route path="/malware/:id" element={<PublicMalwareDetails />} />
       <Route path="/blockchain" element={<PublicBlockchain />} />
-      <Route path="/chat" element={<PublicChat />} />
       <Route path="/register" element={<PublicRegister />} />
       <Route path="/become-contributor" element={<BecomeContributor />} />
       <Route
@@ -196,6 +195,7 @@ function App() {
     <ThemeProvider>
       <AuthProvider>
         <AppRoutes />
+        <FloatingAssistant />
       </AuthProvider>
     </ThemeProvider>
   );

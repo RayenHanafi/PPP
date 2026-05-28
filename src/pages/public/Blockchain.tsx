@@ -358,12 +358,10 @@ export function PublicBlockchain() {
               Verified IOCs can be traced on-chain using lifecycle events and transaction hashes.
             </p>
           </div>
-          <Link to="/chat">
-            <Button>
-              <ShieldCheck className="h-4 w-4" />
-              Ask for context
-            </Button>
-          </Link>
+          <Button variant="outline" disabled>
+            <ShieldCheck className="h-4 w-4" />
+            Use assistant widget
+          </Button>
         </CardContent>
       </Card>
     </PublicShell>

@@ -159,7 +159,8 @@ export interface OrganisationListResponse {
 }
 
 export interface ChatResponse {
-  answer: string;
-  sources: unknown[];
+  response: string;
+  answer?: string;
+  sources?: unknown[];
   confidence?: string;
 }

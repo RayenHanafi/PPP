@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowRight, MessageSquareText } from "lucide-react";
+import { ArrowRight, Bot } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PublicShell } from "../../components/public-dashboard/PublicShell";
 import { SectionHeading } from "../../components/public-dashboard/SectionHeading";
@@ -588,22 +588,17 @@ export function PublicDashboard() {
         )}
         <Card className="border-[#E5E8F2] bg-[#FBFCFF] dark:border-[#2A2A3E] dark:bg-[#0F0F1E]">
           <CardContent className="space-y-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#707A91] dark:text-[#A1A5AF]">
-              Chat
-            </p>
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#707A91] dark:text-[#A1A5AF]">AI Assistant</p>
             <h3 className="text-lg font-semibold text-[#100A36] dark:text-white">
               Ask for context
             </h3>
             <p className="text-sm leading-7 text-[#616B82] dark:text-[#A1A5AF]">
-              The public chat entry point is available for quick threat-context
-              questions using only safe TLP data.
+              Use the floating assistant at the bottom-right for quick public threat-intelligence explanations.
             </p>
-            <Link to="/chat">
-              <Button>
-                <MessageSquareText className="h-4 w-4" />
-                Open chat
-              </Button>
-            </Link>
+            <Button variant="outline" disabled>
+              <Bot className="h-4 w-4" />
+              Assistant available
+            </Button>
           </CardContent>
         </Card>
       </section>

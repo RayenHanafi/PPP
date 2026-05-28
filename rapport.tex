@@ -1,0 +1,1608 @@
+\documentclass[12pt,a4paper,oneside]{book}
+
+\usepackage{cite}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{fancyhdr}
+\usepackage{appendix}
+\usepackage{hyphenat}
+\usepackage{pdfpages}
+
+\usepackage{array,multirow,makecell}
+\newcolumntype{C}[1]{>{\arraybackslash}p{#1}}
+
+\usepackage{enumitem}
+\setlist{leftmargin=*,itemsep=0pt}
+
+\usepackage{centernot}
+\usepackage[linesnumbered,ruled,vlined,english,onelanguage]{algorithm2e}
+
+\usepackage{quotchap}
+\makeatletter
+\renewcommand{\@makechapterhead}[1]{
+ \chapterheadstartvskip
+ {\size@chapter{\sectfont\raggedright
+ {\chapnumfont
+ \ifnum \c@secnumdepth >\m@ne
+ \if@mainmatter\thechapter
+ \fi\fi
+ \par\nobreak}
+ {\raggedright\advance\leftmargin10em\interlinepenalty\@M #1\par}}
+ \nobreak\chapterheadendvskip}}
+\makeatother
+\renewcommand*{\chapterheadendvskip}{\vspace{2cm}}
+
+\usepackage{geometry}
+\geometry{hmargin=2.5cm,vmargin=2.5cm}
+
+\pagestyle{fancyplain}
+\lhead{\fancyplain{}{\nouppercase{\textit{\leftmark}}}}
+\chead{\fancyplain{}{}}
+\rhead{\fancyplain{}{}}
+\lfoot{\fancyplain{}{}}
+\cfoot{\fancyplain{}{}}
+\rfoot{\fancyplain{\thepage}{\thepage}}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+
+\renewcommand{\thesection}{\arabic{section}}
+
+\usepackage{titlesec}
+\titleformat{\paragraph}{\fontsize{11}{10}\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}{0pt}{10pt plus 2pt minus 0pt}{0pt plus 2pt minus 0pt}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+\usepackage{array}
+\usepackage{multirow}
+
+\setlength{\parskip}{8pt}
+\usepackage{setspace}
+
+\usepackage{url}
+
+\usepackage{hyperref}
+\definecolor{darkblue}{rgb}{0.0, 0.0, 0.5}
+\hypersetup{
+ colorlinks,
+ linktocpage=true,
+ linkcolor={darkblue},
+ citecolor={darkblue},
+ urlcolor={blue}}
+
+\sloppy
+
+\author{PPP Team --- INSA University}
+\title{Collaborative Threat Intelligence Platform with Blockchain}
+
+\begin{document}
+\pagenumbering{gobble}
+
+% =============================================================
+% COVER PAGE
+% (Replace this with \includepdf[pages=-]{PageDeGarde.pdf} if you
+%  have a pre-made institutional cover.)
+% =============================================================
+\begin{titlepage}
+\centering
+\vspace*{0.5cm}
+{\large\textsc{INSA University}}\\[0.2cm]
+{\large Ministry of Higher Education and Scientific Research}\\[1.5cm]
+
+{\large\bfseries PERSONAL PROFESSIONAL PROJECT}\\[0.3cm]
+{\normalsize submitted in partial fulfilment of the\\
+3\textsuperscript{rd} Year requirements in Computer Engineering}\\[1.8cm]
+
+\rule{\linewidth}{0.6pt}\\[0.4cm]
+{\Huge\bfseries A Collaborative Threat Intelligence Platform\par}
+\vspace{0.4cm}
+{\LARGE\itshape Enhancing Trust and Integrity with Blockchain Technology\par}
+\rule{\linewidth}{0.6pt}\\[2cm]
+
+{\large\textbf{Prepared by the PPP Team}}\\[0.2cm]
+{\normalsize Group of 4 students --- Computer Engineering}\\[1.5cm]
+
+{\normalsize Defended in front of a jury composed of:}\\[0.4cm]
+\begin{tabular}{ll}
+Jury President & Prof. [Name] \\
+Reviewer       & Prof. [Name] \\
+Supervisor at INSA & Prof. [Name] \\
+\end{tabular}
+
+\vfill
+{\large Academic Year 2025--2026}
+\end{titlepage}
+
+% =============================================================
+% ACKNOWLEDGEMENTS
+% =============================================================
+\chapter*{Acknowledgements}
+\markboth{Acknowledgements}{}
+
+We would like to express our sincere gratitude to all the people who supported
+us throughout this Personal Professional Project. Our deepest thanks go to
+the academic staff of INSA University, and in particular to the teachers of
+the Computer Engineering program, whose guidance, technical insight and
+constant encouragement allowed us to carry this project from an initial idea
+to a working platform.
+
+We are particularly grateful to our project supervisor for the time invested
+in reviewing our work, for the constructive feedback offered during each
+iteration and for the autonomy granted to us in technical decision-making.
+This trust was a decisive factor in the depth we were able to reach.
+
+We also wish to thank the members of the cybersecurity and open-source
+communities whose publications --- on threat sharing platforms, blockchain
+registries and large language models --- shaped the technical orientation
+of this project.
+
+Finally, our gratitude goes to our families and friends for their unwavering
+support, and to one another, for the spirit of collaboration that made this
+team work both productive and rewarding.
+
+\frontmatter
+
+% =============================================================
+% ABSTRACT
+% =============================================================
+\chapter*{Abstract}
+\markboth{Abstract}{}
+
+\normalsize{This report presents the design and implementation of a
+collaborative threat intelligence platform enhanced with blockchain
+technology. Faced with the rapid growth of cyber threats and the difficulty
+for organisations to share indicators of compromise in a trustworthy manner,
+this project proposes a centralised solution that aggregates, validates and
+exposes technical indicators, threat actor profiles and malware samples. The
+platform is built on a layered architecture combining a FastAPI backend, a
+PostgreSQL database, a conversational assistant powered by a large language
+model, and a blockchain layer responsible for the immutable anchoring of
+validated indicators. The report describes the project context, the
+theoretical background of the involved technologies, the design and
+implementation of the prototype, and the evaluation of the obtained results
+against the initial objectives.
+
+\medskip
+{\noindent \textbf{Keywords: } cybersecurity, threat intelligence,
+blockchain, indicators of compromise, smart contract, large language model,
+FastAPI, Solidity. }
+
+% =============================================================
+% RÉSUMÉ
+% =============================================================
+\chapter*{Résumé}
+\markboth{Résumé}{}
+
+\normalsize{Ce rapport présente la conception et la réalisation d'une
+plateforme collaborative de \textit{Threat Intelligence} enrichie par la
+technologie \textit{blockchain}. Face à la prolifération des cybermenaces et
+à la difficulté pour les organisations de partager leurs indicateurs de
+compromission de manière fiable, ce projet propose une solution centralisée
+permettant l'agrégation, la validation et la consultation d'indicateurs
+techniques, de profils d'acteurs malveillants et d'échantillons de logiciels
+malveillants. La plateforme repose sur une architecture en couches articulant
+un \textit{backend} FastAPI, une base de données PostgreSQL, un assistant
+conversationnel basé sur un modèle de langage et une couche
+\textit{blockchain} dédiée à l'ancrage immuable des indicateurs validés.
+
+\medskip
+{\noindent \textbf{Mots-clés : } cybersécurité, \textit{threat intelligence},
+\textit{blockchain}, indicateurs de compromission, \textit{smart contract},
+modèle de langage, FastAPI, Solidity. }
+
+\spacing{1}
+\tableofcontents{}
+\newpage
+\listoffigures
+\newpage
+\listoftables
+\newpage
+\spacing{1.4}
+
+% =============================================================
+% LIST OF ACRONYMS
+% =============================================================
+\chapter*{List of Acronyms}
+\markboth{List of Acronyms}{}
+\begin{itemize}
+\item \textbf{AI} Artificial Intelligence
+\item \textbf{API} Application Programming Interface
+\item \textbf{APT} Advanced Persistent Threat
+\item \textbf{C2} Command and Control
+\item \textbf{CTI} Cyber Threat Intelligence
+\item \textbf{DLT} Distributed Ledger Technology
+\item \textbf{EVM} Ethereum Virtual Machine
+\item \textbf{HTTP} Hypertext Transfer Protocol
+\item \textbf{IOC} Indicator of Compromise
+\item \textbf{JSON} JavaScript Object Notation
+\item \textbf{JWT} JSON Web Token
+\item \textbf{LLM} Large Language Model
+\item \textbf{MISP} Malware Information Sharing Platform
+\item \textbf{NLP} Natural Language Processing
+\item \textbf{ORM} Object-Relational Mapping
+\item \textbf{REST} Representational State Transfer
+\item \textbf{SDK} Software Development Kit
+\item \textbf{SHA} Secure Hash Algorithm
+\item \textbf{SIEM} Security Information and Event Management
+\item \textbf{SQL} Structured Query Language
+\item \textbf{TLP} Traffic Light Protocol
+\item \textbf{TTP} Tactics, Techniques and Procedures
+\item \textbf{UI} User Interface
+\item \textbf{UUID} Universally Unique Identifier
+\end{itemize}
+
+\mainmatter
+
+% =============================================================
+% GENERAL INTRODUCTION
+% =============================================================
+\chapter*{General Introduction}
+\addcontentsline{toc}{chapter}{General Introduction}
+\markboth{General Introduction}{}
+
+The digital transformation of public administrations, private companies and
+critical infrastructures has multiplied the surface of exposure to cyber
+threats. Attackers no longer act in isolation: malicious campaigns are
+organised, automated and propagated across organisational boundaries within
+minutes. A piece of attacker infrastructure --- a command-and-control server,
+a phishing domain or a malware signature --- detected by one organisation
+today is very likely to target another organisation tomorrow. Cyber defence
+has therefore become a fundamentally collaborative discipline.
+
+This collaborative dimension materialises around the concept of Cyber Threat
+Intelligence (CTI). At the heart of CTI lie the Indicators of Compromise
+(IOCs), atomic pieces of evidence that can be used by detection tools to
+identify malicious activity. Yet, while large sharing communities exist, the
+act of trusting an external indicator remains a challenge: how can an analyst
+be sure that a published indicator has not been tampered with after
+publication? How can a contributing organisation prove the authenticity of
+what it submitted? These two questions --- the trustworthiness of data and
+the immutability of the historical record --- are at the core of the project
+presented in this report.
+
+Within the framework of our Personal Professional Project at INSA University,
+we designed and developed an academic platform that combines three
+complementary ingredients. First, a classical web application providing
+structured submission, storage and search of threat intelligence artefacts.
+Second, a conversational assistant based on a large language model, intended
+to lower the barrier of entry for non-expert visitors. Third, an integration
+with a blockchain network that anchors every validated indicator to a
+tamper-evident ledger.
+
+The remainder of this report is organised into three balanced chapters. The
+first chapter establishes the project scope: it describes the academic
+context, formulates the problem and derives the functional and non-functional
+requirements of the platform. The second chapter is dedicated to the
+theoretical background of the three technological pillars that compose the
+solution: collaborative threat intelligence, blockchain technology and
+large language models. The third and final chapter presents the design,
+the implementation choices and a structured evaluation of the delivered
+prototype. A general conclusion summarises the contributions and outlines
+the perspectives identified for future work.
+
+% =============================================================
+% CHAPTER 1 — PROJECT SCOPE
+% =============================================================
+\chapter{Project Scope}
+\label{ch:scope}
+\section*{Introduction}
+This opening chapter delimits the scope of the project. It presents the
+academic context within which the work was conducted, analyses the problem
+addressed by the platform, surveys the existing solutions on the market and
+finally derives the set of functional and non-functional requirements that
+will guide the rest of the report.
+
+% ---------------- Section 1
+\section{Project Context}
+
+\subsection{Academic Framework}
+
+The work presented in this report was carried out in the context of the
+Personal Professional Project (PPP), a structured exercise placed at the
+heart of the third year of the Computer Engineering program at INSA
+University. The PPP is intended to confront students, organised in small
+teams, with a complete software engineering experience: identifying a real
+problem, designing a system, choosing the right technologies, implementing
+the solution and finally evaluating the result. Unlike a classroom assignment,
+the PPP is sized to span an entire semester and explicitly rewards autonomy,
+methodology and the ability to integrate heterogeneous components.
+
+\subsection{Team Organisation}
+
+The team is composed of four third-year students. The work was organised
+into five sequential phases, each placed under the responsibility of a
+dedicated lead while requiring contributions from every member. Weekly
+synchronisation meetings, a shared Git repository and progressive integration
+between modules allowed the team to converge despite the diversity of the
+topics handled in parallel.
+
+\subsection{Project Schedule}
+
+The development effort is articulated around the 14-week schedule illustrated
+in Figure \ref{fig:gantt}. Each phase ends with an internal demonstration
+that conditions the start of the next phase.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.85\textwidth]{images/gantt.png}
+\caption{Gantt chart of the development phases over a 14-week semester. Source: project planning document.}
+\label{fig:gantt}
+\end{figure}
+
+The five phases and their main deliverables are summarised in
+Table \ref{tab:phases}.
+
+\begin{table}[!h]
+\caption{Development phases and main deliverables.}
+\label{tab:phases}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.08\textwidth} | C{.12\textwidth} | p{.65\textwidth} |}
+\hline
+\textbf{Phase} & \textbf{Weeks} & \textbf{Main deliverables} \\
+\hline\hline
+1 & S1--S3   & \nohyphens{Backend skeleton, database schema, API key authentication} \\
+\hline
+2 & S4--S7   & \nohyphens{Conversational assistant and TLP filtering middleware} \\
+\hline
+3 & S8--S9   & \nohyphens{Public dashboard and administration interface} \\
+\hline
+4 & S10--S11 & \nohyphens{Blockchain learning and smart contract prototyping} \\
+\hline
+5 & S12--S14 & \nohyphens{Backend integration with the ledger and final tests} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Working Methodology}
+
+The team followed an incremental approach inspired by agile principles. A
+short Kanban board, hosted on a shared workspace, materialised the backlog
+and made the workload of each member visible. Code reviews systematically
+preceded every merge into the main branch, in order to enforce a homogeneous
+coding style and to share technical knowledge across the team.
+
+% ---------------- Section 2
+\section{Problem Analysis}
+
+\subsection{The Evolving Cybersecurity Landscape}
+
+Cybersecurity is no longer a peripheral concern confined to a few
+specialised teams. Recent reports from international agencies show a steady
+increase in the number, sophistication and impact of incidents. Ransomware
+campaigns disrupt hospitals, phishing operations target banking customers at
+scale, and state-sponsored groups penetrate strategic supply chains for
+long-term espionage. The cost associated with data breaches has reached
+unprecedented levels, and the regulatory pressure --- through frameworks
+such as the GDPR or the NIS2 directive in Europe --- forces organisations to
+adopt a proactive posture.
+
+\subsection{Problem Statement}
+
+In this hostile environment, no single organisation can defend itself in
+isolation. Information about attacker infrastructure must circulate quickly
+between the defenders. However, current information-sharing communities
+suffer from three recurring weaknesses that motivated this project.
+
+\begin{itemize}
+\item \textbf{Absence of cryptographic proof of integrity.} Once an
+indicator is published on a sharing platform, nothing prevents an internal
+modification of the historical record. A contributor cannot prove that what
+was published yesterday is exactly what is being displayed today.
+\item \textbf{High barrier of entry for non-experts.} The interfaces of
+established platforms are intentionally dense and require knowledge of the
+underlying data model, which limits adoption by smaller organisations.
+\item \textbf{Heterogeneous trust models.} Contributors join through
+bilateral agreements or through opaque approval processes, which makes it
+difficult for a newcomer to know how much weight to give to a published
+indicator.
+\end{itemize}
+
+These observations crystallise into the central question of this project:
+
+\textbf{How can we design and implement a collaborative threat intelligence
+platform that is open to public consultation, secure for contributors,
+accessible to non-experts thanks to an AI assistant, and that provides a
+verifiable cryptographic proof of integrity for every validated indicator?}
+
+\subsection{Survey of Existing Solutions}
+
+Several mature platforms already address the problem of threat intelligence
+sharing. The most widely deployed are summarised in Table
+\ref{tab:existing}.
+
+\begin{table}[!h]
+\caption{Comparison of existing collaborative threat intelligence platforms. Source: official project documentation and academic surveys.}
+\label{tab:existing}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.16\textwidth} | p{.50\textwidth} | C{.10\textwidth} | C{.12\textwidth} |}
+\hline
+\textbf{Platform} & \textbf{Main purpose} & \textbf{Open source} & \textbf{Integrity proof} \\
+\hline\hline
+MISP & \nohyphens{Structured sharing of IOCs between trusted partners} & Yes & No \\
+\hline
+OpenCTI & \nohyphens{Aggregation and visualisation of CTI knowledge graphs} & Yes & No \\
+\hline
+AbuseIPDB & \nohyphens{Public crowd-sourced IP reputation database} & No & No \\
+\hline
+VirusTotal & \nohyphens{File and URL scanning, multi-engine analysis} & No & No \\
+\hline
+\end{tabular}
+\end{table}
+
+These platforms confirm the relevance of the collaborative model, yet none
+of them addresses simultaneously the three weaknesses listed above. This gap
+defines the contribution targeted by the present project.
+
+\subsection{Proposed Solution}
+
+To answer the problem statement, we propose an academic platform organised
+around three pillars: a structured submission workflow accessible through
+an HTTP API, a conversational AI assistant designed to lower the barrier
+of entry, and a blockchain anchoring layer dedicated to integrity. The
+detailed design is the subject of Chapter \ref{ch:solution}.
+
+% ---------------- Section 3
+\section{Solution Requirements}
+
+\subsection{General Objectives}
+
+The objectives derived from the problem statement are summarised in
+Table \ref{tab:objectives}. They will be revisited in
+Chapter \ref{ch:solution} when the prototype is evaluated.
+
+\begin{table}[!h]
+\caption{General objectives of the project.}
+\label{tab:objectives}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.20\textwidth} | p{.70\textwidth} |}
+\hline
+\textbf{Objective} & \textbf{Description} \\
+\hline\hline
+Centralisation & \nohyphens{Aggregate IOCs, threat actors and malware samples submitted by multiple organisations into a single repository.} \\
+\hline
+Accessibility & \nohyphens{Allow any visitor to consult public-level intelligence without creating an account.} \\
+\hline
+AI assistance & \nohyphens{Provide a chatbot able to answer basic questions about cybersecurity concepts and to guide users through the database.} \\
+\hline
+Integrity & \nohyphens{Anchor each validated indicator on a blockchain ledger, providing a verifiable proof of non-tampering.} \\
+\hline
+Security & \nohyphens{Authenticate contributing organisations exclusively through API keys, with traceable usage and instant revocation.} \\
+\hline
+Compliance & \nohyphens{Enforce the Traffic Light Protocol to control the visibility of submitted data.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Actors and Roles}
+
+The platform serves three categories of users with clearly differentiated
+permissions, illustrated in Figure \ref{fig:actors}.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.85\textwidth]{images/usecase.png}
+\caption{Simplified use-case diagram of the three categories of users. Source: authors.}
+\label{fig:actors}
+\end{figure}
+
+\subsubsection{Public Visitor}
+Any unauthenticated user can browse the public dashboard, search indicators,
+consult their details and interact with the conversational assistant. The
+visitor never sees data classified above the TLP:GREEN/WHITE levels.
+
+\subsubsection{Contributor Organisation}
+A contributor is a verified organisation that submits intelligence data
+through a dedicated API key. The platform deliberately avoids a classical
+login-password model: each request is identifiable, traceable and a
+compromised key can be revoked instantly.
+
+\subsubsection{Administrator}
+The administrator is the only role that uses session-based authentication
+(e-mail, password and a JSON Web Token). The administrator approves new
+contributors, generates and revokes API keys, and supervises pending
+submissions.
+
+\subsection{Functional Requirements}
+
+The functional requirements derived from the use-case analysis are
+summarised in Table \ref{tab:fr}.
+
+\begin{table}[!h]
+\caption{Main functional requirements of the platform.}
+\label{tab:fr}
+\centering
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{| C{.08\textwidth} | p{.65\textwidth} | C{.17\textwidth} |}
+\hline
+\textbf{Code} & \textbf{Requirement} & \textbf{Actor} \\
+\hline\hline
+FR-1  & \nohyphens{Submit a new IOC together with its descriptive context} & Contributor \\
+\hline
+FR-2  & \nohyphens{Submit a threat actor profile} & Contributor \\
+\hline
+FR-3  & \nohyphens{Submit a malware sample} & Contributor \\
+\hline
+FR-4  & \nohyphens{Browse and search the public catalogue of indicators} & Visitor \\
+\hline
+FR-5  & \nohyphens{Consult the detail and enrichment of an indicator} & Visitor \\
+\hline
+FR-6  & \nohyphens{Interact with the AI assistant in natural language} & Visitor / Contrib. \\
+\hline
+FR-7  & \nohyphens{Verify the blockchain proof of an indicator} & Visitor \\
+\hline
+FR-8  & \nohyphens{Flag one's own IOC as a false positive} & Contributor \\
+\hline
+FR-9  & \nohyphens{Approve, refuse or revoke a contributor application} & Administrator \\
+\hline
+FR-10 & \nohyphens{Review the submissions placed in a pending state} & Administrator \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Non-Functional Requirements}
+
+The quality attributes that act as guidelines during the design phase are
+reported in Table \ref{tab:nfr}.
+
+\begin{table}[!h]
+\caption{Non-functional requirements considered for the project.}
+\label{tab:nfr}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.20\textwidth} | p{.70\textwidth} |}
+\hline
+\textbf{Attribute} & \textbf{Expected level} \\
+\hline\hline
+Security & \nohyphens{All submissions are authenticated by API key; keys are stored hashed and never in clear; TLP filters are enforced server-side.} \\
+\hline
+Integrity & \nohyphens{Every validated IOC is anchored on a blockchain; any modification is detectable.} \\
+\hline
+Performance & \nohyphens{Public endpoints answer in less than one second under nominal load.} \\
+\hline
+Scalability & \nohyphens{The architecture supports the addition of new contributors without redesign.} \\
+\hline
+Maintainability & \nohyphens{The code base is modular, documented and supported by automated database migrations.} \\
+\hline
+Auditability & \nohyphens{Every contributor request is logged with a timestamp, source organisation and operation type.} \\
+\hline
+Usability & \nohyphens{The public interface is understandable by a non-technical visitor in less than three minutes.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\section*{Conclusion}
+This first chapter established the scope of the project. It described the
+academic context in which the work was conducted, analysed the problem of
+collaborative threat intelligence and surveyed the existing platforms. From
+this analysis, a precise problem statement was formulated, and the
+functional and non-functional requirements that will drive the rest of the
+report were enumerated. The next chapter dives into the theoretical
+background of the three technological pillars on which the proposed
+solution is built.
+
+% =============================================================
+% CHAPTER 2 — SOLUTION BACKGROUND
+% =============================================================
+\chapter{Solution Background}
+\label{ch:background}
+\section*{Introduction}
+Before describing how the platform was designed and built, it is necessary
+to introduce the conceptual foundations on which the work relies. This
+chapter is dedicated to the theoretical background of the three pillars of
+the solution. The first section addresses the discipline of cyber threat
+intelligence, the second section explores blockchain technology and smart
+contracts, and the third section presents the role of large language models
+in conversational assistance. Each section progresses from the general
+definition of the concept to the specific design choices that are relevant
+to the project.
+
+% ---------------- Section 1
+\section{Cyber Threat Intelligence}
+
+\subsection{Definition and Levels of Intelligence}
+
+Cyber Threat Intelligence (CTI) can be defined as the collection and
+analysis of structured information regarding adversaries and their
+capabilities. The aim is to convert raw data into actionable knowledge that
+supports better decisions. The literature traditionally distinguishes three
+levels of intelligence, summarised in Table \ref{tab:cti-levels}.
+
+\begin{table}[!h]
+\caption{The three classical levels of cyber threat intelligence.}
+\label{tab:cti-levels}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.18\textwidth} | C{.18\textwidth} | p{.50\textwidth} |}
+\hline
+\textbf{Level} & \textbf{Audience} & \textbf{Content} \\
+\hline\hline
+Strategic    & Executives        & \nohyphens{Long-term trends, geopolitical context, risk evolution.} \\
+\hline
+Tactical     & Security managers & \nohyphens{Adversary tactics, techniques and procedures (TTPs).} \\
+\hline
+Operational  & SOC analysts      & \nohyphens{Concrete indicators ready to be ingested by detection tools.} \\
+\hline
+\end{tabular}
+\end{table}
+
+The project focuses on the operational level, which is the one most directly
+served by collaborative platforms.
+
+\subsection{Indicators of Compromise}
+
+At the operational level, the central artefact is the Indicator of
+Compromise (IOC): a piece of technical evidence whose presence on an
+information system is considered a strong sign of malicious activity. Table
+\ref{tab:ioc-types} lists the main categories of IOCs handled in this
+project.
+
+\begin{table}[!h]
+\caption{Main categories of indicators of compromise considered in the project.}
+\label{tab:ioc-types}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.18\textwidth} | p{.72\textwidth} |}
+\hline
+\textbf{Type} & \textbf{Description and example} \\
+\hline\hline
+IP address & \nohyphens{Network endpoint involved in malicious activity (scanning, brute-force, command-and-control). Example: 185.220.101.45.} \\
+\hline
+URL & \nohyphens{Web resource hosting phishing pages, payloads or exfiltration endpoints.} \\
+\hline
+File hash & \nohyphens{Cryptographic fingerprint (MD5, SHA-256) of a known malicious binary.} \\
+\hline
+E-mail address & \nohyphens{Sender address used in phishing or business e-mail compromise campaigns.} \\
+\hline
+\end{tabular}
+\end{table}
+
+Individually, an IOC has a limited lifespan because attackers rotate their
+infrastructure. Collectively, however, large feeds of indicators become a
+strategic asset that can be integrated into firewalls, intrusion detection
+systems, SIEM platforms and endpoint protection solutions.
+
+\subsection{The Traffic Light Protocol}
+
+Sharing intelligence between organisations raises the question of
+confidentiality: not all data can circulate as openly as a public weather
+forecast. The Traffic Light Protocol (TLP) is an international standard
+defined by FIRST.org for marking sensitive information. Its four levels are
+recalled in Table \ref{tab:tlp}.
+
+\begin{table}[!h]
+\caption{Confidentiality levels defined by the Traffic Light Protocol.}
+\label{tab:tlp}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.15\textwidth} | p{.55\textwidth} | C{.15\textwidth} |}
+\hline
+\textbf{Level} & \textbf{Meaning} & \textbf{Public dashboard} \\
+\hline\hline
+TLP:RED   & \nohyphens{Strictly restricted to named recipients} & No \\
+\hline
+TLP:AMBER & \nohyphens{Restricted to the organisation and its partners} & No \\
+\hline
+TLP:GREEN & \nohyphens{Shared inside the cybersecurity community} & Yes \\
+\hline
+TLP:WHITE & \nohyphens{Public information, no restriction} & Yes \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Collaborative Sharing Platforms}
+
+The most prominent collaborative platforms --- MISP and OpenCTI --- inspired
+the data model of the present project. MISP organises shared knowledge into
+events grouping IOCs, attributes and tags. OpenCTI takes a different
+approach by representing the same knowledge as a graph of entities (threat
+actors, intrusion sets, malware, indicators) connected by semantic
+relationships. Both platforms acknowledge the importance of TLP and of a
+strong authentication of contributors, but neither of them offers a
+cryptographic proof that the published record has not been altered ---
+precisely the gap that the present project aims to fill.
+
+% ---------------- Section 2
+\section{Blockchain Technology and Smart Contracts}
+
+\subsection{Definition and Properties}
+
+A blockchain is a distributed data structure in which transactions are
+organised in cryptographically linked blocks, replicated across a network
+of nodes that share a common consensus protocol. The seminal idea was
+introduced by the Bitcoin protocol in 2008 and has since been generalised
+to many other applications. Three properties make blockchain particularly
+attractive for an integrity-oriented use case:
+
+\begin{itemize}
+\item \textbf{Immutability.} Once a block is accepted by the network, any
+attempt to modify a past entry would invalidate the cryptographic chain
+and would be immediately detected.
+\item \textbf{Decentralisation.} The state of the ledger is not under the
+control of a single party; multiple nodes hold an authoritative copy.
+\item \textbf{Auditability.} Any external party can verify that a given
+record has been registered at a given time, without trusting the operator
+of the platform.
+\end{itemize}
+
+\subsection{Public versus Permissioned Networks}
+
+Two families of blockchain networks coexist. \emph{Public} networks such
+as Ethereum are open to any participant, secured by economic incentives and
+suitable for use cases where trust between participants is minimal. They
+typically charge transaction fees in a native cryptocurrency. \emph{Permissioned}
+networks such as Hyperledger Fabric restrict participation to a closed set
+of known organisations and rely on identity-based consensus. They are
+better suited to enterprise use cases where confidentiality of participation
+matters. Table \ref{tab:bc-compare} summarises the comparison.
+
+\begin{table}[!h]
+\caption{Comparison of public and permissioned blockchain networks.}
+\label{tab:bc-compare}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.20\textwidth} | C{.30\textwidth} | C{.30\textwidth} |}
+\hline
+\textbf{Criterion} & \textbf{Public (Ethereum)} & \textbf{Permissioned (Fabric)} \\
+\hline\hline
+Participation     & Open               & Restricted        \\
+\hline
+Consensus         & Proof of stake     & Identity-based    \\
+\hline
+Transaction cost  & Paid in ETH        & None              \\
+\hline
+Throughput        & Moderate           & Higher            \\
+\hline
+Confidentiality   & Limited            & High              \\
+\hline
+\end{tabular}
+\end{table}
+
+For an academic project, the choice retained is a hybrid one: \textbf{Ganache},
+a local Ethereum-compatible network, is used during development for its
+accessibility and the maturity of its tooling; \textbf{Hyperledger Fabric}
+is identified as the production target because of its alignment with the
+collaborative-but-vetted nature of the contributor community.
+
+\subsection{Smart Contracts}
+
+A smart contract is a piece of code deployed on a blockchain that exposes
+functions callable through transactions. The execution of the function is
+performed by every node of the network, which guarantees that the result is
+deterministic and verifiable. In the Ethereum ecosystem, the canonical
+language for writing smart contracts is \textbf{Solidity}, a statically
+typed language compiled to bytecode for the Ethereum Virtual Machine (EVM).
+A smart contract typically exposes:
+
+\begin{itemize}
+\item \textbf{Storage variables}, persisted in the state of the contract;
+\item \textbf{Functions}, either modifying the state (paid transactions) or
+read-only (free calls);
+\item \textbf{Events}, emitted during execution and indexable from
+off-chain code.
+\end{itemize}
+
+In the project, a minimal Solidity contract called \textit{ThreatRegistry}
+exposes two write functions (registration and revocation of an IOC) and
+emits two events (\texttt{IOCRegistered} and \texttt{IOCRevoked}) that
+together form an append-only history --- a pattern known as \emph{event
+sourcing}.
+
+\subsection{Off-Chain Integration with Web3}
+
+Most real systems do not store everything on-chain. The recommended pattern
+is to keep the raw data in a classical database and to anchor on-chain only
+a cryptographic digest of the data. Verification then consists in
+re-computing the digest from the off-chain record and comparing it with the
+one stored on-chain. The Python library \textbf{Web3.py} is the de-facto
+bridge between a backend application and an Ethereum-compatible network: it
+allows the backend to read the state of the contract, to build and sign
+transactions and to wait for their confirmation.
+
+% ---------------- Section 3
+\section{Large Language Models for User Assistance}
+
+\subsection{From Statistical NLP to Large Language Models}
+
+For decades, natural language processing relied on hand-crafted rules and
+statistical models trained on relatively small corpora. The introduction of
+the \emph{Transformer} architecture in 2017 marked a turning point by
+making it possible to train very large models on very large corpora,
+giving rise to the family of large language models (LLMs). These models
+have demonstrated remarkable abilities at generating coherent text,
+explaining concepts in natural language and engaging in multi-turn dialogue.
+
+\subsection{Usage Modes}
+
+LLMs can be used in different modes depending on the level of autonomy
+expected from the model, as summarised in Table \ref{tab:llm-modes}.
+
+\begin{table}[!h]
+\caption{Common usage modes of large language models.}
+\label{tab:llm-modes}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.20\textwidth} | p{.65\textwidth} |}
+\hline
+\textbf{Mode} & \textbf{Description} \\
+\hline\hline
+Direct generation & \nohyphens{The model produces an answer from the prompt alone.} \\
+\hline
+Retrieval-augmented & \nohyphens{A retrieval step extracts a relevant context from a knowledge base; the model is then asked to answer using this context.} \\
+\hline
+Agent-based & \nohyphens{The model can call external tools (APIs, calculators, search engines) to gather information before answering.} \\
+\hline
+\end{tabular}
+\end{table}
+
+In this project, the assistant follows the \emph{retrieval-augmented} mode
+in a controlled way: a small, TLP-filtered context is extracted from the
+relational database and injected into the prompt before the call to the
+model. This approach preserves the confidentiality guarantees of the
+platform while keeping the conversational flexibility of the model.
+
+\subsection{Risks and Mitigations}
+
+Three well-known risks of LLM-based assistants are particularly relevant in
+a cybersecurity context: \emph{hallucinations} (the model invents facts),
+\emph{prompt injection} (a malicious user tricks the model into ignoring
+its system prompt) and \emph{data leakage} (the model echoes sensitive data
+present in its context). The mitigations adopted in the project are
+respectively to limit the assistant to a basic conceptual scope, to
+sanitise the user input on the server side, and to filter the context
+through the TLP rules before any call to the model.
+
+\section*{Conclusion}
+This second chapter introduced the conceptual foundations on which the
+proposed solution is built. Section 1 clarified the discipline of cyber
+threat intelligence and the role of indicators of compromise. Section 2
+presented blockchain technology and the smart-contract model that will be
+used as an integrity anchor. Section 3 outlined how large language models
+can be safely embedded in a sensitive application. The next chapter brings
+these three pillars together in the concrete design and implementation of
+the platform, and evaluates the resulting prototype.
+
+% =============================================================
+% CHAPTER 3 — DESIGN, IMPLEMENTATION AND EVALUATION
+% =============================================================
+\chapter{Solution Design, Implementation and Evaluation}
+\label{ch:solution}
+\section*{Introduction}
+This third and final chapter brings together the project scope defined in
+Chapter \ref{ch:scope} and the theoretical foundations introduced in
+Chapter \ref{ch:background}. Section 1 presents the design of the system:
+the layered architecture, the use-case and class diagrams, the relational
+data model and the main interaction sequences. Section 2 details the
+implementation choices, the technologies retained and the way each
+functional module was realised. Section 3 is devoted to the evaluation of
+the delivered prototype, both against the initial objectives and through a
+manual test campaign.
+
+% ---------------- Section 1 — Design
+\section{Design}
+
+\subsection{Layered Architecture}
+
+The platform follows a strict layered architecture, illustrated in
+Figure \ref{fig:archi}. Each layer has a single responsibility and
+communicates only with its immediate neighbours.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.8\textwidth]{images/architecture.png}
+\caption{Four-layer architecture of the platform. Source: authors.}
+\label{fig:archi}
+\end{figure}
+
+\subsubsection{Presentation Layer}
+A single-page application written in React and enriched with the Recharts
+library for the interactive visualisations of the public dashboard.
+
+\subsubsection{Application Layer}
+A Python backend implemented with the FastAPI framework. It hosts the
+business logic, the validation rules, the TLP filtering and the
+authentication middleware.
+
+\subsubsection{Conversational Layer}
+A thin wrapper around a large language model. It enriches each user
+question with a TLP-filtered context extracted from the database before
+calling the model.
+
+\subsubsection{Blockchain Layer}
+A Ganache local network running an Ethereum-compatible node, hosting the
+\textit{ThreatRegistry} smart contract responsible for anchoring validated
+indicators.
+
+\subsection{Use-Case Diagram}
+
+Figure \ref{fig:actors-bis} recalls the use-case diagram introduced in
+Chapter \ref{ch:scope}. The three categories of users interact with the
+platform through clearly differentiated entry points.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.85\textwidth]{images/usecase.png}
+\caption{Use-case diagram showing the actors and their interactions with the platform.}
+\label{fig:actors-bis}
+\end{figure}
+
+\subsection{Data Model}
+
+The relational schema contains five core tables, illustrated by the entity
+relationship diagram of Figure \ref{fig:erd}.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.9\textwidth]{images/erd.png}
+\caption{Simplified entity-relationship diagram of the platform.}
+\label{fig:erd}
+\end{figure}
+
+The central \texttt{iocs} table stores the technical indicators with their
+contextual metadata. The \texttt{organisations} table stores the
+contributing entities together with a trust score that drives the automatic
+validation policy. The \texttt{threat\_actors} and \texttt{malware\_samples}
+tables follow the same modelling principles but are dedicated to
+higher-level artefacts. Finally, the \texttt{blockchain\_records} table
+bridges the relational world and the ledger by storing for each anchored
+IOC the transaction hash and the block number returned by the smart
+contract.
+
+\subsection{Life-Cycle of an IOC}
+
+The status field of an IOC tracks its life-cycle through the six states
+described in Table \ref{tab:status}.
+
+\begin{table}[!h]
+\caption{Life-cycle of an IOC and the meaning of each status value.}
+\label{tab:status}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.20\textwidth} | p{.70\textwidth} |}
+\hline
+\textbf{Status} & \textbf{Meaning} \\
+\hline\hline
+\texttt{validated}      & \nohyphens{Default state after a successful submission; immediately anchored on the blockchain.} \\
+\hline
+\texttt{pending}        & \nohyphens{Temporary state for low-trust submissions; requires administrator review.} \\
+\hline
+\texttt{false\_positive} & \nohyphens{Flagged by its own contributor as erroneous; a revocation event is anchored on the chain.} \\
+\hline
+\texttt{revoked}        & \nohyphens{Definitively invalidated; revocation is logged on the chain.} \\
+\hline
+\texttt{rejected}       & \nohyphens{Refused for abuse or inappropriate content; not anchored.} \\
+\hline
+\texttt{deprecated}     & \nohyphens{Kept for historical reference only.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Main Interaction Sequence}
+
+Figure \ref{fig:seq} describes the sequence of interactions triggered by the
+submission of an IOC: the backend validates the API key, applies the
+automatic validation rules, persists the indicator in PostgreSQL, then
+calls the smart contract through Web3.py and finally stores the resulting
+transaction hash.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.95\textwidth]{images/sequence.png}
+\caption{Sequence diagram of an IOC submission.}
+\label{fig:seq}
+\end{figure}
+
+The corresponding decision logic is formalised in Algorithm \ref{algo:submit}.
+
+\begin{algorithm}[!h]
+\setstretch{1.15}
+\caption{Processing of an incoming IOC submission}
+\label{algo:submit}
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\Input{$P$ : the JSON payload of the submission\\
+$K$ : the API key carried by the HTTP request}
+\Output{$R$ : the persisted IOC together with its blockchain proof}
+
+$\textit{org} \gets \textsf{lookupOrganisation}(K)$\;
+\If{$\textit{org} = \emptyset$ \textbf{or} $\textit{org}.\textit{status} \neq$ \textsf{approved}}{
+  \textbf{reject} with HTTP 401\;
+}
+\textsf{validateSchema}($P$)\;
+\eIf{$\textit{org}.\textit{trust\_score} \geq 50$ \textbf{and not} \textsf{isSuspicious}($P$)}{
+  $\textit{status} \gets$ \texttt{validated}\;
+}{
+  $\textit{status} \gets$ \texttt{pending}\;
+}
+$R \gets \textsf{persistIOC}(P, \textit{org}, \textit{status})$\;
+\If{$\textit{status} =$ \texttt{validated}}{
+  $\textit{tx} \gets \textsf{anchorOnBlockchain}(R)$\;
+  $\textsf{persistBlockchainRecord}(R, \textit{tx})$\;
+}
+\textbf{return} $R$\;
+\end{algorithm}
+
+% ---------------- Section 2 — Implementation
+\section{Implementation}
+
+\subsection{Technology Stack}
+
+The technologies retained for the project are listed in
+Table \ref{tab:stack}. They were selected for their maturity, their
+alignment with the requirements and their relevance to the academic
+context.
+
+\begin{table}[!h]
+\caption{Technology stack of the platform with justification.}
+\label{tab:stack}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.20\textwidth} | C{.25\textwidth} | p{.40\textwidth} |}
+\hline
+\textbf{Component} & \textbf{Technology} & \textbf{Justification} \\
+\hline\hline
+Frontend         & React + Recharts        & \nohyphens{Mature ecosystem, interactive charts} \\
+\hline
+Backend          & Python 3.11 + FastAPI   & \nohyphens{Native async, automatic OpenAPI documentation} \\
+\hline
+Database         & PostgreSQL 15           & \nohyphens{Strong relational guarantees} \\
+\hline
+ORM              & SQLAlchemy + Alembic    & \nohyphens{Typed queries, clean migrations} \\
+\hline
+LLM              & Anthropic Claude API    & \nohyphens{High-quality conversational responses} \\
+\hline
+Enrichment       & ip-api, AbuseIPDB       & \nohyphens{Free IP reputation services} \\
+\hline
+Blockchain (dev) & Ganache + Truffle       & \nohyphens{Local Ethereum-compatible network} \\
+\hline
+Blockchain (prod)& Hyperledger Fabric      & \nohyphens{Permissioned ledger for organisations} \\
+\hline
+Smart contract   & Solidity 0.8            & \nohyphens{Standard EVM language} \\
+\hline
+Blockchain SDK   & Web3.py 6               & \nohyphens{Python bridge to Ethereum} \\
+\hline
+Authentication   & JWT (python-jose)       & \nohyphens{Stateless administrator sessions} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Submission and Collaboration Module}
+
+\subsubsection{Authentication by API Key}
+Every contributor request carries an API key in a custom HTTP header
+\texttt{X-API-Key}. The key is generated by the administrator at the moment
+of approval, transmitted once by e-mail and stored hashed (SHA-256) in the
+database. The backend rejects any request whose hash does not match a known
+and active organisation. This mechanism, summarised in
+Table \ref{tab:apikey}, intentionally trades the comfort of a classical
+session for the precision of per-request traceability.
+
+\begin{table}[!h]
+\caption{Properties of the API key authentication mechanism.}
+\label{tab:apikey}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.20\textwidth} | p{.70\textwidth} |}
+\hline
+\textbf{Property} & \textbf{Implementation} \\
+\hline\hline
+Format        & \nohyphens{SHA-256 hexadecimal string} \\
+\hline
+Transmission  & \nohyphens{Custom HTTP header X-API-Key} \\
+\hline
+Storage       & \nohyphens{Hashed in the organisations table, never in clear} \\
+\hline
+Revocation    & \nohyphens{Instant by changing the status of the organisation} \\
+\hline
+Renewal       & \nohyphens{New key generated by the administrator and sent by e-mail} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Submission Endpoints}
+Three structured endpoints expose the submission of, respectively,
+indicators, threat actors and malware samples. Their JSON payloads carry
+the same conceptual structure: identification of the artefact, contextual
+description, TLP level and optional enrichment data. The backend validates
+each payload through a Pydantic schema before persistence.
+
+\subsubsection{Automatic Validation and the Trust Score}
+To preserve scalability, the platform does not rely on manual validation of
+every submission. Each organisation carries a numerical trust score between
+0 and 100, computed from its history. A submission whose trust score is
+above the threshold is automatically validated and immediately anchored. A
+submission below the threshold or matching a suspicious pattern is placed
+in a pending state for administrator review.
+
+\subsubsection{False-Positive Workflow}
+A dedicated endpoint allows a contributor to flag one of its own indicators
+as a false positive. The backend verifies ownership, updates the status of
+the IOC to \texttt{false\_positive} and emits a revocation event on the
+blockchain.
+
+\subsection{Conversational AI Assistance Module}
+
+\subsubsection{Scope of the Assistant}
+The chatbot integrated into the platform is intentionally limited to an
+assistance role. In the current prototype it relies on a local configuration
+so as to ensure its availability independently from any external network
+condition. Its core mission is to answer basic, factual questions about the
+cybersecurity vocabulary used on the platform --- for example explaining
+what the Traffic Light Protocol is, what is meant by an indicator of
+compromise or how to read a blockchain proof. It does \emph{not} compute
+any danger score, does not participate in the validation of indicators and
+never reveals data classified above the visitor's permission level.
+
+\subsubsection{Architecture of the Chatbot}
+The assistant follows the four-step pipeline shown in
+Figure \ref{fig:chatbot}.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.95\textwidth]{images/chatbot.png}
+\caption{Processing pipeline of a user question by the conversational assistant.}
+\label{fig:chatbot}
+\end{figure}
+
+\subsubsection{Contextual Filtering}
+A fundamental property of the implementation is that the assistant never
+has direct access to the database. The backend extracts a tailored context
+based on the question and filters it according to the user's permission
+level before sending it to the language model. This indirection enforces
+TLP rules even on the AI layer.
+
+\subsubsection{Implemented Capabilities}
+The capabilities currently delivered are summarised in Table \ref{tab:chat}.
+
+\begin{table}[!h]
+\caption{Capabilities currently implemented in the conversational assistant.}
+\label{tab:chat}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.25\textwidth} | p{.65\textwidth} |}
+\hline
+\textbf{Capability} & \textbf{Description} \\
+\hline\hline
+Concept explanation & \nohyphens{Plain-language definition of cybersecurity terms (IOC, TLP, APT, etc.).} \\
+\hline
+Database guidance & \nohyphens{High-level orientation about where to find a piece of information on the platform.} \\
+\hline
+Reading assistance & \nohyphens{Help in interpreting the fields of an indicator or the meaning of a blockchain proof.} \\
+\hline
+Multi-turn memory & \nohyphens{Short conversational history kept inside the current session.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Blockchain Anchoring Module}
+
+\subsubsection{Scope of the Integration}
+In the current prototype, blockchain anchoring is implemented \textbf{only
+for indicators of compromise}. Threat actor profiles and malware samples
+are stored in the database and exposed by the API, but they are not yet
+pushed to the ledger. Extending the anchoring mechanism to these two
+additional categories is identified as a perspective.
+
+\subsubsection{The ThreatRegistry Smart Contract}
+The smart contract, named \textit{ThreatRegistry}, is written in Solidity
+0.8 and deployed on a local Ganache network. Its responsibility is
+intentionally narrow: it persists a minimal record per IOC and emits the
+events needed to reconstruct the full history. The fields anchored on the
+chain are summarised in Table \ref{tab:onchain}.
+
+\begin{table}[!h]
+\caption{Data fields recorded on the blockchain for each IOC.}
+\label{tab:onchain}
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{| C{.18\textwidth} | C{.12\textwidth} | p{.55\textwidth} |}
+\hline
+\textbf{Field} & \textbf{Type} & \textbf{Role} \\
+\hline\hline
+\texttt{iocHash}   & string  & \nohyphens{SHA-256 of the raw value (never the value itself)} \\
+\hline
+\texttt{category}  & string  & \nohyphens{Category of threat (phishing, botnet, scanner, etc.)} \\
+\hline
+\texttt{tlp}       & string  & \nohyphens{TLP level of the indicator} \\
+\hline
+\texttt{timestamp} & uint256 & \nohyphens{Block timestamp, used as a tamper-evident date} \\
+\hline
+\end{tabular}
+\end{table}
+
+A deliberate design choice is to anchor only the hash of the indicator and
+not its raw value. This decision protects the confidentiality of the
+underlying data while preserving the ability of any external party to
+verify that a value presented to them matches the one originally registered.
+
+\subsubsection{Backend--Blockchain Integration}
+The backend communicates with the smart contract through the Web3.py
+library. When the validation step decides that an IOC is acceptable, the
+backend builds the registration transaction, sends it, waits for the
+receipt and finally stores the resulting transaction hash and block number
+in the \texttt{blockchain\_records} table. The combination of the database
+record and the on-chain entry forms the proof of integrity that is later
+displayed on the public detail page.
+
+\subsubsection{Event Sourcing and Immutability}
+Once an entry has been written on the chain it cannot be modified or
+deleted. Correcting an erroneous indicator therefore relies on an
+event-sourcing model: a registration transaction is followed, when needed,
+by a revocation transaction referring to the same identifier. The frontend
+reconstructs the current state of the indicator by replaying the sequence
+of events.
+
+\subsection{User Interfaces}
+
+\subsubsection{Public Dashboard}
+The public dashboard is the entry point for any visitor. It displays a
+paginated list of indicators classified as TLP:GREEN or TLP:WHITE, a
+search bar, two charts dedicated respectively to the distribution by
+category and to the temporal evolution of submissions, an access point to
+the AI assistant and a link to the contributor registration form.
+
+\subsubsection{Indicator Detail Page}
+The detail page of an indicator shows the contextual data submitted by the
+contributor, the enrichment information automatically retrieved from
+external services, a coloured TLP badge, the current status of the
+indicator and the full sequence of blockchain events that affected it. The
+transaction hash is displayed together with the block number and the
+corresponding timestamp.
+
+\subsubsection{Contributor Registration Form}
+The registration form collects the legal information needed to verify the
+identity of a new organisation: legal name, registration number, technical
+contact e-mail, website, activity description and country.
+
+\subsubsection{Administration Dashboard}
+The administration dashboard, accessible only after a JWT-based
+authentication, exposes the list of pending applications, the actions to
+approve or refuse them, the management of API keys and a global view of
+the platform statistics.
+
+% ---------------- Section 3 — Evaluation
+\section{Evaluation}
+
+\subsection{Coverage of the Initial Objectives}
+
+Table \ref{tab:eval-obj} measures how each general objective declared in
+Chapter \ref{ch:scope} has been covered by the delivered prototype.
+
+\begin{table}[!h]
+\caption{Evaluation of the prototype against the general objectives.}
+\label{tab:eval-obj}
+\centering
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{| C{.18\textwidth} | p{.55\textwidth} | C{.12\textwidth} |}
+\hline
+\textbf{Objective} & \textbf{Outcome} & \textbf{Status} \\
+\hline\hline
+Centralisation     & \nohyphens{Submission endpoints for IOCs, threat actors and malware samples are fully operational.} & Achieved \\
+\hline
+Accessibility      & \nohyphens{Public dashboard exposes TLP:GREEN/WHITE data without authentication.} & Achieved \\
+\hline
+AI assistance      & \nohyphens{Local chatbot answers basic questions on the platform vocabulary.} & Achieved \\
+\hline
+Integrity          & \nohyphens{IOCs are anchored on a Ganache network through the ThreatRegistry contract.} & Achieved \\
+\hline
+Security           & \nohyphens{API key authentication with hashed storage and revocation is in place.} & Achieved \\
+\hline
+Compliance         & \nohyphens{TLP filtering is enforced on every endpoint, including the chatbot context.} & Achieved \\
+\hline
+Full anchoring     & \nohyphens{Threat actors and malware samples are not yet anchored on the chain.} & Partial \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Coverage of the Functional Requirements}
+
+The ten functional requirements introduced in Chapter \ref{ch:scope} are
+revisited in Table \ref{tab:eval-fr}.
+
+\begin{table}[!h]
+\caption{Coverage of the functional requirements by the prototype.}
+\label{tab:eval-fr}
+\centering
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{| C{.08\textwidth} | p{.65\textwidth} | C{.17\textwidth} |}
+\hline
+\textbf{Code} & \textbf{Requirement} & \textbf{Status} \\
+\hline\hline
+FR-1  & \nohyphens{Submit an IOC}                          & Done \\
+\hline
+FR-2  & \nohyphens{Submit a threat actor}                  & Done (no anchoring) \\
+\hline
+FR-3  & \nohyphens{Submit a malware sample}                & Done (no anchoring) \\
+\hline
+FR-4  & \nohyphens{Browse and search the catalogue}        & Done \\
+\hline
+FR-5  & \nohyphens{Consult the detail of an indicator}     & Done \\
+\hline
+FR-6  & \nohyphens{Interact with the AI assistant}         & Done (basic scope) \\
+\hline
+FR-7  & \nohyphens{Verify the blockchain proof}            & Done \\
+\hline
+FR-8  & \nohyphens{Flag a false positive}                  & Done \\
+\hline
+FR-9  & \nohyphens{Approve or revoke a contributor}        & Done \\
+\hline
+FR-10 & \nohyphens{Review pending submissions}             & Done \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Functional Validation Campaign}
+
+Functional validation was carried out through a manual test plan covering
+the four user flows --- public consultation, contributor submission,
+false-positive flagging and administrator approval. The results are
+summarised in Table \ref{tab:tests}.
+
+\begin{table}[!h]
+\caption{Summary of the functional validation campaign.}
+\label{tab:tests}
+\centering
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{| C{.08\textwidth} | p{.65\textwidth} | C{.17\textwidth} |}
+\hline
+\textbf{ID} & \textbf{Scenario} & \textbf{Result} \\
+\hline\hline
+T1 & \nohyphens{Anonymous visitor consults the public dashboard}          & Pass \\
+\hline
+T2 & \nohyphens{Anonymous visitor uses the chatbot}                       & Pass \\
+\hline
+T3 & \nohyphens{Contributor submits a valid IOC}                          & Pass \\
+\hline
+T4 & \nohyphens{Contributor submits with an invalid API key}              & Reject (expected) \\
+\hline
+T5 & \nohyphens{Contributor flags one of its own IOCs as false positive}  & Pass \\
+\hline
+T6 & \nohyphens{Contributor tries to flag an IOC of another organisation} & Reject (expected) \\
+\hline
+T7 & \nohyphens{Administrator approves a new contributor application}     & Pass \\
+\hline
+T8 & \nohyphens{Visitor verifies the blockchain proof of an indicator}    & Pass \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Strengths and Limitations}
+
+The evaluation highlights three particular strengths of the delivered work.
+First, the architecture is clean and modular: each layer can evolve
+independently. Second, the blockchain integration is functional end-to-end,
+which is a non-trivial achievement at academic level given the learning
+curve of Solidity and Web3. Third, the chatbot demonstrates how an AI
+layer can be added to a sensitive application without breaking its security
+model, thanks to the systematic filtering of the context before any call to
+the language model.
+
+The team also identifies a number of limitations. The blockchain anchoring
+is currently restricted to IOCs; the chatbot covers only basic
+concept-explanation questions; and the prototype has not yet been
+benchmarked under a heavy concurrent load. These limitations are not
+disqualifying for the academic exercise but constitute clear leads for
+continuation, discussed in the general conclusion.
+
+\section*{Conclusion}
+This third chapter walked through the design, the implementation and the
+evaluation of the platform. The design section translated the requirements
+of Chapter \ref{ch:scope} and the theoretical pillars of
+Chapter \ref{ch:background} into a coherent architecture, a relational
+data model and a clear life-cycle for indicators. The implementation section
+detailed the technology stack and the way each functional module was
+realised. The evaluation section measured the prototype against the initial
+objectives and confirmed that the principal targets have been reached, with
+the documented exception of the full anchoring of all artefact categories.
+
+% =============================================================
+% GENERAL CONCLUSION
+% =============================================================
+\chapter*{General Conclusion and Perspectives}
+\addcontentsline{toc}{chapter}{General Conclusion and Perspectives}
+\markboth{General Conclusion and Perspectives}{}
+
+This Personal Professional Project led us, in the space of fourteen weeks,
+to design and implement a complete collaborative threat intelligence
+platform combining a structured submission workflow, a conversational AI
+assistant and an integrity layer based on blockchain technology. Beyond the
+technical realisation, the project gave us the opportunity to address a
+real cybersecurity challenge --- the trustworthy sharing of indicators of
+compromise --- and to confront a number of decisions that have practical
+implications.
+
+From a technical standpoint, the project allowed us to articulate four
+heterogeneous worlds: a modern web frontend in React, an asynchronous
+Python backend with FastAPI, an Ethereum-compatible blockchain network
+with Solidity and Web3, and a large language model accessed through a
+dedicated API. The discipline imposed by the layered architecture and by
+the careful enforcement of the Traffic Light Protocol across every layer
+was probably the most valuable lesson of the project: security is not a
+feature added at the end but a property that emerges from consistent design
+choices.
+
+From a methodological standpoint, the structured organisation of the work
+into five phases and the weekly synchronisation meetings allowed the four
+members of the team to converge despite the diversity of the topics handled
+in parallel. We also learned the importance of an honest evaluation:
+rather than overstating the scope of the prototype, we explicitly delimit
+what is functional today --- IOC anchoring, basic chatbot, full
+administrative workflow --- and what remains to be done.
+
+\paragraph{Perspectives.} Several extensions are envisaged to continue the
+project beyond its initial scope:
+
+\begin{itemize}
+\item \textbf{Extending the blockchain anchoring.} The current prototype
+anchors only indicators of compromise. A natural and high-value extension
+consists in applying the same anchoring mechanism to threat actor profiles
+and to malware samples, so that the integrity guarantees provided by the
+ledger cover the entire knowledge base.
+\item \textbf{Enriching the conversational assistant.} The chatbot is
+deliberately limited today to basic explanations such as the meaning of
+the Traffic Light Protocol. Future iterations could allow it to summarise
+complex indicators, to generate targeted mitigation advice or to support
+multi-language interaction, while preserving the strict TLP filtering on
+the context provided to the model.
+\item \textbf{Migration to a permissioned ledger.} The development was
+conducted on Ganache for reasons of accessibility. A migration to
+Hyperledger Fabric, anticipated in the design, would bring the project
+closer to a deployable production system, with explicit identity management
+of participating organisations.
+\item \textbf{Performance benchmarking.} The platform has not yet been
+evaluated under heavy concurrent load. A systematic benchmarking campaign
+would allow us to characterise the practical limits of the chosen
+architecture.
+\item \textbf{Automated trust scoring.} The trust score that drives the
+automatic validation policy is, in the current prototype, configured by
+the administrator. A logical evolution is to compute it dynamically from
+the historical behaviour of each contributor.
+\item \textbf{Integration with public threat feeds.} Finally, the platform
+could be enriched by an ingestion of open feeds such as MISP, Feodo
+Tracker or AbuseIPDB, which would broaden the catalogue available to
+visitors.
+\end{itemize}
+
+The project, while academic in scope, demonstrates that the combination of
+artificial intelligence and blockchain technology can deliver tangible
+value in the field of collaborative cybersecurity. It also reinforced our
+conviction that the design of secure systems is, above all, a matter of
+careful coordination between functional needs, technical choices and human
+practices.
+
+% =============================================================
+% APPENDIX
+% =============================================================
+\begin{appendix}
+\chapter{Summary of Public API Endpoints}
+
+Table \ref{tab:endpoints} recalls the main endpoints exposed by the
+platform. The full OpenAPI specification is automatically generated by
+FastAPI and accessible through the \texttt{/docs} route at runtime.
+
+\begin{table}[!h]
+\caption{Main HTTP endpoints exposed by the platform.}
+\label{tab:endpoints}
+\centering
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{| C{.08\textwidth} | C{.30\textwidth} | p{.40\textwidth} | C{.12\textwidth} |}
+\hline
+\textbf{Method} & \textbf{Route} & \textbf{Purpose} & \textbf{Auth} \\
+\hline\hline
+GET  & /iocs                  & \nohyphens{List public IOCs}                  & Public \\
+\hline
+GET  & /iocs/:id              & \nohyphens{Detail of an IOC}                  & Public \\
+\hline
+POST & /iocs/submit           & \nohyphens{Submit a new IOC}                  & API key \\
+\hline
+GET  & /iocs/mine             & \nohyphens{List own submissions}              & API key \\
+\hline
+POST & /iocs/false-positive   & \nohyphens{Flag an IOC as false positive}     & API key \\
+\hline
+GET  & /threat-actors         & \nohyphens{List public threat actors}         & Public \\
+\hline
+POST & /threat-actors/submit  & \nohyphens{Submit a threat actor}             & API key \\
+\hline
+GET  & /malware               & \nohyphens{List public malware samples}       & Public \\
+\hline
+POST & /malware/submit        & \nohyphens{Submit a malware sample}           & API key \\
+\hline
+POST & /register              & \nohyphens{Contributor registration request}  & Public \\
+\hline
+POST & /admin/login           & \nohyphens{Administrator authentication}      & Public \\
+\hline
+POST & /admin/approve/:id     & \nohyphens{Approve a registration}            & Admin JWT \\
+\hline
+POST & /admin/revoke/:id      & \nohyphens{Revoke an API key}                 & Admin JWT \\
+\hline
+GET  & /blockchain/verify/:id & \nohyphens{Verify the blockchain proof}       & Public \\
+\hline
+POST & /chat                  & \nohyphens{Interact with the AI assistant}    & Public \\
+\hline
+\end{tabular}
+\end{table}
+
+\end{appendix}
+
+% =============================================================
+% NETOGRAPHY
+% =============================================================
+\chapter*{Netography}
+\addcontentsline{toc}{chapter}{Netography}
+\markboth{Netography}{}
+
+\begin{enumerate}[label={[\arabic*]}]
+
+\item MISP Project, \textit{Open Source Threat Intelligence Platform}.
+\url{https://www.misp-project.org/} (accessed May 2026).
+
+\item OpenCTI Platform, \textit{Open Cyber Threat Intelligence Platform}.
+\url{https://www.opencti.io/} (accessed May 2026).
+
+\item FIRST.org, \textit{Traffic Light Protocol (TLP) Version 2.0}.
+\url{https://www.first.org/tlp/} (accessed May 2026).
+
+\item AbuseIPDB, \textit{IP Address Abuse Database}.
+\url{https://www.abuseipdb.com/} (accessed May 2026).
+
+\item Feodo Tracker, \textit{Abuse.ch Botnet C2 IP Blocklist}.
+\url{https://feodotracker.abuse.ch/} (accessed May 2026).
+
+\item VirusTotal, \textit{File and URL Analyser}.
+\url{https://www.virustotal.com/} (accessed May 2026).
+
+\item FastAPI Documentation, \textit{Modern Python Web Framework for APIs}.
+\url{https://fastapi.tiangolo.com/} (accessed May 2026).
+
+\item PostgreSQL Global Development Group, \textit{PostgreSQL Documentation}.
+\url{https://www.postgresql.org/docs/} (accessed May 2026).
+
+\item SQLAlchemy, \textit{The Database Toolkit for Python}.
+\url{https://www.sqlalchemy.org/} (accessed May 2026).
+
+\item React, \textit{A JavaScript Library for Building User Interfaces}.
+\url{https://react.dev/} (accessed May 2026).
+
+\item Recharts, \textit{Charting Library Built with React}.
+\url{https://recharts.org/} (accessed May 2026).
+
+\item Solidity Programming Language, \textit{Official Documentation}.
+\url{https://soliditylang.org/} (accessed May 2026).
+
+\item Truffle Suite, \textit{Smart Contract Development Tools}.
+\url{https://trufflesuite.com/} (accessed May 2026).
+
+\item Ganache, \textit{Personal Ethereum Blockchain for Development}.
+\url{https://trufflesuite.com/ganache/} (accessed May 2026).
+
+\item Web3.py, \textit{Python Library for Interacting with Ethereum}.
+\url{https://web3py.readthedocs.io/} (accessed May 2026).
+
+\item Hyperledger Fabric, \textit{Enterprise Permissioned Blockchain Framework}.
+\url{https://www.hyperledger.org/projects/fabric} (accessed May 2026).
+
+\item Anthropic, \textit{Claude API Documentation}.
+\url{https://docs.anthropic.com/} (accessed May 2026).
+
+\item ENISA, \textit{Threat Landscape Report}.
+\url{https://www.enisa.europa.eu/} (accessed May 2026).
+
+\item MITRE Corporation, \textit{ATT\&CK Knowledge Base}.
+\url{https://attack.mitre.org/} (accessed May 2026).
+
+\item NIST, \textit{Guide to Cyber Threat Information Sharing} (SP 800-150).
+\url{https://csrc.nist.gov/publications/detail/sp/800-150/final} (accessed May 2026).
+
+\end{enumerate}
+
+\end{document}
